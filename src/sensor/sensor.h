@@ -1,5 +1,9 @@
 #include <stdint.h>
 
+#ifndef SENSOR_H
+#define SENSOR_H
+
+
 template <class D>
 class Sensor {
   public:
@@ -11,3 +15,5 @@ class SensorData {
   public:
     uint8_t convertLORA();
 };
+
+#endif
