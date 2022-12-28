@@ -6,6 +6,11 @@ void HIHSensor::configure() {
     return;
 }
 
+HIHData::HIHData(uint16_t humidity, uint16_t temperature) {
+    this->humidity = humidity;
+    this->temperature = temperature;
+}
+
 HIHData HIHSensor::getData() {
-    return {20, 25};
+    return HIHData(1, 2);
 }
