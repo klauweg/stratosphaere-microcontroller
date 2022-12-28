@@ -1,0 +1,1 @@
+const uint8_t DISPLAY_ADDRESS = 0x3c;
