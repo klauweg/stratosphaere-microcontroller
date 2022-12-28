@@ -7,20 +7,24 @@
 using namespace std;
 
 //..\arduino-cli.exe compile strato.ino --fqbn esp32:esp32:t-beam
+HIHSensor *hihSensor = new HIHSensor();
+GPSSensor *gpsSensor = new GPSSensor();
+LM75Sensor *lm75Sensor = new LM75Sensor();
+MPUSensor *mpuSensor = new MPUSensor();
+MS5Sensor *ms5Sensor = new MS5Sensor();
 
 void setup() {
-  HIHSensor *hihSensor = new HIHSensor();
   hihSensor->configure();
-  GPSSensor *gpsSensor = new GPSSensor();
   gpsSensor->configure();
-  LM75Sensor *lm75Sensor = new LM75Sensor();
   lm75Sensor->configure();
-  MPUSensor *mpuSensor = new MPUSensor();
   mpuSensor->configure();
-  MS5Sensor *ms5Sensor = new MS5Sensor();
   ms5Sensor->configure();
 }
 
 void loop() {
-
+  HIHData hihData = hihSensor->getData();
+  GPSData gpsData = gpsSensor->getData();
+  LM75Data lm75Data = lm75Sensor->getData();
+  MPUData mpuDataData = mpuSensor->getData();
+  MS5Data ms5Data = ms5Sensor->getData();
 }
