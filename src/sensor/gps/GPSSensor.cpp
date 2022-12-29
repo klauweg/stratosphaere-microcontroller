@@ -1,11 +1,6 @@
 #include "GPSSensor.h"
 #include <iostream>
 
-void GPSSensor::configure() {
-    std::cout << "78\n";
-    return;
-}
-
 GPSData::GPSData(uint16_t latitude,
             uint16_t longitude,
             uint16_t altitude,
@@ -22,6 +17,11 @@ GPSData::GPSData(uint16_t latitude,
     this->quality = quality;
     this->geoidal = geoidal;
     this->correction_age = correction_age;
+}
+
+void GPSSensor::configure() {
+    std::cout << "78\n";
+    return;
 }
 
 GPSData GPSSensor::getData() {
