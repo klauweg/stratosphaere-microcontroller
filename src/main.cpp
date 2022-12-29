@@ -1,11 +1,11 @@
 //#include "utilities.h"
-#include <serial.h>
+#include <Arduino.h>
 
 void setup()
 {
-   //initBoard();
-   Serial.begin(115200);
-   Serial1.begin(9600);
+  //initBoard();
+  Serial.begin(115200);
+  Serial1.begin(9600, SERIAL_8N1, 34, 12);
 }
 
 void loop()
