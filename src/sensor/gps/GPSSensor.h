@@ -8,7 +8,8 @@ class GPSData : public SensorData, public TinyGPSPlus {
 
 class GPSSensor : public Sensor<GPSData> {
     public:
-        GPSSensor();
+        GPSData gps;
+        TinyGPSCustom gpgsv;
         void configure();
         GPSData getData();
 };

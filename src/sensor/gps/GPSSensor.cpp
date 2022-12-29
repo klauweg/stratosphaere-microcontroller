@@ -1,16 +1,20 @@
 #include "GPSSensor.h"
 
 void GPSSensor::configure() {
-}
-
-GPSSensor::GPSSensor() {
+    this->gps = GPSData();
+    this->gpgsv = TinyGPSCustom(this->gps, "GPRMC", 10);
     Serial1.begin(9600, SERIAL_8N1, 34, 12);
 }
 
 GPSData GPSSensor::getData() {
-    GPSData gps = GPSData();
     while (Serial1.available() > 0) {
-        gps.encode(Serial1.read());
+        int result = Serial1.read();
+        Serial.write(result);
+        this->gps.encode(result);
     }
-    return GPSData(gps);
+    /*if (this->gpgsv.isUpdated()) {
+        Serial.print("Number Of Sensors is ");
+        //Serial.println(this->gpgsv.value());
+    }*/
+    return this->gps;
 }
