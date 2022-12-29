@@ -1,15 +1,12 @@
-#include "../sensor.h"
 #include "TinyGPS++.h"
 
-class GPSData : public SensorData, public TinyGPSPlus {
-    public:
-        uint8_t convertLORA();
+class GPSData : public TinyGPSPlus {
 };
 
-class GPSSensor : public Sensor<GPSData> {
+class GPSSensor {
     public:
-        GPSData gps;
-        TinyGPSCustom gpgsv;
+        GPSData *gps;
+        TinyGPSCustom *gpgsv;
         void configure();
-        GPSData getData();
+        void getData();
 };
