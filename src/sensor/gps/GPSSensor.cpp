@@ -20,7 +20,6 @@ GPSData::GPSData(uint16_t latitude,
 }
 
 void GPSSensor::configure() {
-    std::cout << "78\n";
     return;
 }
 

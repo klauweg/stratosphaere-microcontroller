@@ -1,10 +1,9 @@
 #include "../sensor.h"
 
 class LM75Data : public SensorData {
-    private:
-        uint16_t temperature;
     public:
-        LM75Data(uint16_t);
+        int16_t temperature;
+        LM75Data(int16_t);
         uint8_t convertLORA();
 };
 

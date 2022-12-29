@@ -1,11 +1,10 @@
 #include "../sensor.h"
 
 class MS5Data : public SensorData {
-    private:
-        uint16_t pressure;
-        uint16_t temperature;
     public:
-        MS5Data(uint16_t, uint16_t);
+        int16_t pressure;
+        int16_t temperature;
+        MS5Data(int16_t, int16_t);
         uint8_t convertLORA();
 };
 

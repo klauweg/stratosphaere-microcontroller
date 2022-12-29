@@ -4,13 +4,13 @@
 
 const uint8_t MPU_ADDRESS = 0x68;
 
-MPUData::MPUData(uint16_t acc_x, 
-            uint16_t acc_y,
-            uint16_t acc_z,
-            uint16_t gyro_x,
-            uint16_t gyro_y,
-            uint16_t gyro_z,
-            uint16_t temperature) {
+MPUData::MPUData(int16_t acc_x, 
+            int16_t acc_y,
+            int16_t acc_z,
+            int16_t gyro_x,
+            int16_t gyro_y,
+            int16_t gyro_z,
+            double temperature) {
     this->acc_x = acc_x;
     this->acc_y = acc_y;
     this->acc_z = acc_z;
@@ -30,7 +30,7 @@ void MPUSensor::configure() {
 MPUData MPUSensor::getData() {
   Wire.beginTransmission(MPU_ADDRESS);
   Wire.write(0x3B);
-  Wire.endTransmission(false);
+  Wire.endTransmission(true);
   Wire.requestFrom(MPU_ADDRESS, (size_t) 7*2, true);
   int16_t acc_x = Wire.read()<<8 | Wire.read();
   int16_t acc_y = Wire.read()<<8 | Wire.read();
@@ -39,5 +39,5 @@ MPUData MPUSensor::getData() {
   int16_t gyro_x = Wire.read()<<8 | Wire.read();
   int16_t gyro_y = Wire.read()<<8 | Wire.read();
   int16_t gyro_z = Wire.read()<<8 | Wire.read();
-  return {temperature/340.00+36.53, acc_x, acc_y, acc_z, gyro_x, gyro_y, gyro_z};
+  return {acc_x, acc_y, acc_z, gyro_x, gyro_y, gyro_z, temperature/340.00+36.53};
 }
