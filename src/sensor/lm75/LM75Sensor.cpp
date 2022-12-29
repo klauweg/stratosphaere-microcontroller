@@ -2,8 +2,6 @@
 #include <iostream>
 #include <Wire.h>
 
-const uint8_t LM75_ADDRESS = 0x4f;
-
 LM75Data::LM75Data(int16_t temperature) {
     this->temperature = temperature;
 }

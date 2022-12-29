@@ -1,5 +1,7 @@
 #include "../sensor.h"
 
+const uint8_t MPU_ADDRESS = 0x68;
+
 class MPUData : public SensorData {
     public:
         int16_t acc_x, acc_y, acc_z, gyro_x, gyro_y, gyro_z;

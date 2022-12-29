@@ -1,5 +1,7 @@
 #include "../sensor.h"
 
+const uint8_t HIH_ADDRESS = 0x27;
+
 class HIHData : public SensorData {
     public:
         int16_t humidity, temperature;

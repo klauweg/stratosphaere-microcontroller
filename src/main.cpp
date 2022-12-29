@@ -25,6 +25,14 @@ void setup() {
   lm75Sensor->configure();
   mpuSensor->configure();
   ms5Sensor->configure();
+  Serial.println(ms5Sensor->coefficient[0]);
+  Serial.println(ms5Sensor->coefficient[1]);
+  Serial.println(ms5Sensor->coefficient[2]);
+  Serial.println(ms5Sensor->coefficient[3]);
+  Serial.println(ms5Sensor->coefficient[4]);
+  Serial.println(ms5Sensor->coefficient[5]);
+  Serial.println(ms5Sensor->coefficient[6]);
+  Serial.println(ms5Sensor->coefficient[7]);
 }
 
 void loop() {
@@ -38,4 +46,6 @@ void loop() {
   Serial.println(mpuData.temperature);
   Serial.println(ms5Data.pressure);
   Serial.println(ms5Data.temperature);
+  Serial.println(ms5Sensor->correct(ms5Data).pressure);
+  Serial.println(ms5Sensor->correct(ms5Data).temperature);
 }

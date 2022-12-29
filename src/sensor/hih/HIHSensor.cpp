@@ -2,8 +2,6 @@
 #include <iostream>
 #include <Wire.h>
 
-const uint8_t HIH_ADDRESS = 0x27;
-
 void HIHSensor::configure() {
 }
 

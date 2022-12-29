@@ -2,8 +2,6 @@
 #include <iostream>
 #include <Wire.h>
 
-const uint8_t MPU_ADDRESS = 0x68;
-
 MPUData::MPUData(int16_t acc_x, 
             int16_t acc_y,
             int16_t acc_z,
