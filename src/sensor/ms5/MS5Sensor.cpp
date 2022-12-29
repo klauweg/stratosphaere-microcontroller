@@ -39,7 +39,7 @@ int32_t MS5Sensor::getMeasurement(measurement _measurement) {
   return measurement;
 }
 
-MS5Data MS5Sensor::correct(MS5Data data) {
+MS5CorrectedData MS5Sensor::correct(MS5Data data) {
   int32_t temperature_raw = data.temperature;
 	int32_t pressure_raw = data.pressure;
 	
@@ -94,5 +94,5 @@ MS5Data MS5Sensor::correct(MS5Data data) {
 
 	pressure_calc = (((SENS * pressure_raw) / 2097152 ) - OFF) / 32768;
 
-  return MS5Data(pressure_calc/10, temp_calc/100);
+  return {pressure_calc/10.0f, temp_calc/100.0f};
 }

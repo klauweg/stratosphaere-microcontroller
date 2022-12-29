@@ -8,6 +8,8 @@
 #include <Wire.h>
 #include "SD_MMC.h"
 
+long lastMillis = 0;
+
 //..\arduino-cli.exe compile strato.ino --fqbn esp32:esp32:t-beam
 HIHSensor *hihSensor = new HIHSensor();
 GPSSensor *gpsSensor = new GPSSensor();
@@ -25,27 +27,36 @@ void setup() {
   lm75Sensor->configure();
   mpuSensor->configure();
   ms5Sensor->configure();
-  Serial.println(ms5Sensor->coefficient[0]);
-  Serial.println(ms5Sensor->coefficient[1]);
-  Serial.println(ms5Sensor->coefficient[2]);
-  Serial.println(ms5Sensor->coefficient[3]);
-  Serial.println(ms5Sensor->coefficient[4]);
-  Serial.println(ms5Sensor->coefficient[5]);
-  Serial.println(ms5Sensor->coefficient[6]);
-  Serial.println(ms5Sensor->coefficient[7]);
 }
 
 void loop() {
-  delay(10000);
+  Serial.println("Last Loop Duration: ");
+  Serial.println(millis()-lastMillis);
+  lastMillis = millis();
   //HIHData hihData = hihSensor->getData();
-  //GPSData gpsData = gpsSensor->getData();
+  GPSData gpsData = gpsSensor->getData();
   //LM75Data lm75Data = lm75Sensor->getData();
   MPUData mpuData = mpuSensor->getData();
   MS5Data ms5Data = ms5Sensor->getData();
   Serial.println("-----------------");
-  Serial.println(mpuData.temperature);
-  Serial.println(ms5Data.pressure);
-  Serial.println(ms5Data.temperature);
-  Serial.println(ms5Sensor->correct(ms5Data).pressure);
-  Serial.println(ms5Sensor->correct(ms5Data).temperature);
+    if (gpsData.time.hour() < 10) Serial.print(F("0"));
+    Serial.print(gpsData.time.hour());
+    Serial.print(":");
+    if (gpsData.time.minute() < 10) Serial.print(F("0"));
+    Serial.print(gpsData.time.minute());
+    Serial.print(":");
+    if (gpsData.time.second() < 10) Serial.print(F("0"));
+    Serial.print(gpsData.time.second());
+    Serial.print(".");
+    if (gpsData.time.centisecond() < 10) Serial.print(F("0"));
+    Serial.println(gpsData.time.centisecond());
+  Serial.println(gpsData.location.lat());
+  Serial.println(gpsData.location.lng());
+  Serial.println("-----------------");
+  //Serial.println(mpuData.temperature);
+  //Serial.println(ms5Data.pressure);
+  //Serial.println(ms5Data.temperature);
+  //Serial.println(ms5Sensor->correct(ms5Data).pressure);
+  //Serial.println(ms5Sensor->correct(ms5Data).temperature);
+  delay(10000);
 }

@@ -18,12 +18,17 @@ class MS5Data : public SensorData {
         uint8_t convertLORA();
 };
 
+struct MS5CorrectedData {
+    float pressure;
+    float temperature;
+};
+
 class MS5Sensor : public Sensor<MS5Data> {
     public:
         uint16_t coefficient[8];
         void configure();
         MS5Data getData();
-        MS5Data correct(MS5Data data);
+        MS5CorrectedData correct(MS5Data data);
     private:
         int32_t getMeasurement(measurement _measurement);
 };
