@@ -24,6 +24,7 @@ void setup() {
   //lm75Sensor->configure();
   mpuSensor->configure();
   ms5Sensor->configure();
+  Serial.print("\033[2J");    // clear screen command
 }
 
 void loop() {
@@ -35,8 +36,7 @@ void loop() {
   MPUData mpuData = mpuSensor->getData();
   MS5Data ms5Data = ms5Sensor->getData();
 
-  Serial.write(27);       // ESC command
-  Serial.print("[2J");    // clear screen command
+  Serial.print("\033[f");
 
   //hihData.print();
   gpsData.print();
@@ -48,5 +48,4 @@ void loop() {
   Serial.print("Last Tick Duration: ");
   Serial.println(millis()-lastMillis);
   Serial.print("\n");
-  delay(120);
 }

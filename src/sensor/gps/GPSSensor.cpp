@@ -2,7 +2,7 @@
 
 void GPSSensor::configure() {
     this->gps = new GPSData;
-    this->gpgsv = new TinyGPSCustom(*this->gps, "GPGSV", 2);
+    this->gpgsv = new TinyGPSCustom(*this->gps, "GPGSV", 3);
     Serial1.begin(9600, SERIAL_8N1, 34, 12);
 }
 
@@ -12,7 +12,9 @@ GPSData GPSSensor::getData() {
         (*this->gps).encode(result);
     }
     if ((*this->gpgsv).isUpdated()) {
-        (*this->gps).visibleSatelites = 0;
+		Serial.println("Sateilitesacadawdwad:");
+		Serial.println((*this->gpgsv).value());
+        (*this->gps).visibleSatelites = atoi((*this->gpgsv).value());
     }
     return (*this->gps);
 }
