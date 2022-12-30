@@ -3,6 +3,8 @@
 
 class GPSData : public SensorData, public TinyGPSPlus {
     public:
+        uint8_t visibleSatelites;
+        void print();
         uint8_t convertLORA();
 };
 

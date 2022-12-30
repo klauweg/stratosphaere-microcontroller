@@ -14,6 +14,7 @@ class Sensor {
 class SensorData {
   public:
     uint8_t convertLORA();
+    void print();
 };
 
 #endif

@@ -6,6 +6,7 @@ class LM75Data : public SensorData {
     public:
         int16_t temperature;
         LM75Data(int16_t);
+        void print();
         uint8_t convertLORA();
 };
 

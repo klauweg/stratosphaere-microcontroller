@@ -9,7 +9,6 @@
 
 long lastMillis = 0;
 
-//..\arduino-cli.exe compile strato.ino --fqbn esp32:esp32:t-beam
 HIHSensor *hihSensor = new HIHSensor();
 GPSSensor *gpsSensor = new GPSSensor();
 LM75Sensor *lm75Sensor = new LM75Sensor();
@@ -29,34 +28,19 @@ void setup() {
 }
 
 void loop() {
-  Serial.println("Last Loop Duration: ");
-  Serial.println(millis()-lastMillis);
+  Serial.write(27);       // ESC command
+  Serial.print("[2J");    // clear screen command
   lastMillis = millis();
-  //HIHData hihData = hihSensor->getData();
+
+  HIHData hihData = hihSensor->getData();
   GPSData gpsData = gpsSensor->getData();
-  //LM75Data lm75Data = lm75Sensor->getData();
+  LM75Data lm75Data = lm75Sensor->getData();
   MPUData mpuData = mpuSensor->getData();
   MS5Data ms5Data = ms5Sensor->getData();
-  /*Serial.println("-----------------");
-  if (gpsData.time.hour() < 10) Serial.print(F("0"));
-  Serial.print(gpsData.time.hour());
-  Serial.print(":");
-  if (gpsData.time.minute() < 10) Serial.print(F("0"));
-  Serial.print(gpsData.time.minute());
-  Serial.print(":");
-  if (gpsData.time.second() < 10) Serial.print(F("0"));
-  Serial.print(gpsData.time.second());
-  Serial.print(".");
-  if (gpsData.time.centisecond() < 10) Serial.print(F("0"));
-  Serial.println(gpsData.time.centisecond());
-  Serial.println(gpsData.location.lat());
-  Serial.println(gpsData.location.lng());
-  Serial.println(gpsData.satellites.value());
-  Serial.println("-----------------");*/
-  //Serial.println(mpuData.temperature);
-  //Serial.println(ms5Data.pressure);
-  //Serial.println(ms5Data.temperature);
-  //Serial.println(ms5Sensor->correct(ms5Data).pressure);
-  //Serial.println(ms5Sensor->correct(ms5Data).temperature);
+  hihData.print();
+  gpsData.print();
+  lm75Data.print();
+  mpuData.print();
+  ms5Data.print(ms5Sensor->correct(ms5Data));
   delay(10000);
 }

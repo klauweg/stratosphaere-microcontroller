@@ -6,6 +6,7 @@ class HIHData : public SensorData {
     public:
         int16_t humidity, temperature;
         HIHData(int16_t, int16_t);
+        void print();
         uint8_t convertLORA();
 };
 

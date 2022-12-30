@@ -1,6 +1,7 @@
 #include "MPUSensor.h"
 #include <iostream>
 #include <Wire.h>
+#include <Arduino.h>
 
 MPUData::MPUData(int16_t acc_x, 
             int16_t acc_y,
@@ -16,6 +17,27 @@ MPUData::MPUData(int16_t acc_x,
     this->gyro_y = gyro_y;
     this->gyro_z = gyro_z;
     this->temperature = temperature;
+}
+
+void MPUData::print() {
+	Serial.println("===[ MPU ]===");
+	Serial.print("Acceleration: ");
+	Serial.print("x: ");
+	Serial.print(this->acc_x);
+	Serial.print(" y: ");
+	Serial.print(this->acc_y);
+	Serial.print(" z: ");
+	Serial.println(this->acc_z);
+	Serial.print("Gyroscope: ");
+	Serial.print("x: ");
+	Serial.print(this->gyro_x);
+	Serial.print(" y: ");
+	Serial.print(this->gyro_y);
+	Serial.print(" z: ");
+	Serial.println(this->gyro_z);
+	Serial.print("Temperature: ");
+	Serial.println(this->temperature);
+	Serial.print("\n");
 }
 
 void MPUSensor::configure() {

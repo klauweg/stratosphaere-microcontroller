@@ -1,10 +1,23 @@
 #include "MS5Sensor.h"
-#include <iostream>
 #include <Wire.h>
+#include <Arduino.h>
 
 MS5Data::MS5Data(int32_t pressure, int32_t temperature) {
     this->pressure = pressure;
     this->temperature = temperature;
+}
+
+void MS5Data::print(MS5CorrectedData corrected) {
+	Serial.println("===[ MS5 ]===");
+	Serial.print("Temperature: ");
+	Serial.println(this->temperature);
+	Serial.print("Pressure: ");
+	Serial.println(this->pressure);
+	Serial.print("Corrected Temperature: ");
+	Serial.println(corrected.temperature);
+	Serial.print("Corrected Pressure: ");
+	Serial.println(corrected.pressure);
+	Serial.print("\n");
 }
 
 void MS5Sensor::configure() {

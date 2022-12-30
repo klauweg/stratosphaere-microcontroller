@@ -10,23 +10,25 @@ enum measurement {
 	TEMPERATURE = 0x10
 };
 
+struct MS5CorrectedData {
+    float pressure;
+    float temperature;
+};
+
 class MS5Data : public SensorData {
     public:
         int32_t pressure;
         int32_t temperature;
         MS5Data(int32_t, int32_t);
+        void print(MS5CorrectedData corrected);
         uint8_t convertLORA();
-};
-
-struct MS5CorrectedData {
-    float pressure;
-    float temperature;
 };
 
 class MS5Sensor : public Sensor<MS5Data> {
     public:
         uint16_t coefficient[8];
         void configure();
+        void print();
         MS5Data getData();
         MS5CorrectedData correct(MS5Data data);
     private:

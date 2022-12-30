@@ -1,9 +1,16 @@
 #include "LM75Sensor.h"
-#include <iostream>
 #include <Wire.h>
+#include <Arduino.h>
 
 LM75Data::LM75Data(int16_t temperature) {
     this->temperature = temperature;
+}
+
+void LM75Data::print() {
+	Serial.println("===[ LM75 ]===");
+  Serial.print("Temperature: ");
+  Serial.println(this->temperature);
+	Serial.print("\n");
 }
 
 void LM75Sensor::configure() {

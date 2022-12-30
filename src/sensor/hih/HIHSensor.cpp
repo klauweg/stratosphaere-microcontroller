@@ -1,5 +1,5 @@
 #include "HIHSensor.h"
-#include <iostream>
+#include <Arduino.h>
 #include <Wire.h>
 
 void HIHSensor::configure() {
@@ -8,6 +8,15 @@ void HIHSensor::configure() {
 HIHData::HIHData(int16_t humidity, int16_t temperature) {
     this->humidity = humidity;
     this->temperature = temperature;
+}
+
+void HIHData::print() {
+	Serial.println("===[ HIH ]===");
+  Serial.print("Temperature: ");
+  Serial.println(this->temperature);
+  Serial.print("Humidity: ");
+  Serial.println(this->humidity);
+	Serial.print("\n");
 }
 
 HIHData HIHSensor::getData() {
