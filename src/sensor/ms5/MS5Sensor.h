@@ -16,21 +16,27 @@ struct MS5CorrectedData {
 };
 
 class MS5Data : public SensorData {
-    public:
+    private:
         int32_t pressure;
         int32_t temperature;
+    public:
         MS5Data(int32_t, int32_t);
+        MS5Data();
         void print(MS5CorrectedData corrected);
         uint8_t convertLORA();
+        int32_t getPressure() {return this->pressure;};
+        int32_t getTemperature() {return this->temperature;};
 };
 
 class MS5Sensor : public Sensor<MS5Data> {
+    protected:
+        DataResult<MS5Data> getData();
     public:
-        uint16_t coefficient[8];
         void configure();
         void print();
-        MS5Data getData();
         MS5CorrectedData correct(MS5Data data);
+        uint16_t getCoefficient() {return *(this->coefficient);};
     private:
-        int32_t getMeasurement(measurement _measurement);
+        uint16_t coefficient[8];
+        DataResult<int32_t> getMeasurement(measurement _measurement);
 };

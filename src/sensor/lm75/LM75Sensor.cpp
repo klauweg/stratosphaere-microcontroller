@@ -1,9 +1,11 @@
 #include "LM75Sensor.h"
 #include <Wire.h>
-#include <Arduino.h>
 
 LM75Data::LM75Data(int16_t temperature) {
     this->temperature = temperature;
+}
+LM75Data::LM75Data() {
+    this->temperature = 0;
 }
 
 void LM75Sensor::configure() {
@@ -13,18 +15,15 @@ void LM75Sensor::configure() {
   Wire.endTransmission(true);
 }
 
-LM75Data LM75Sensor::getData() {
+DataResult<LM75Data> LM75Sensor::getData() {
   Wire.beginTransmission(LM75_ADDRESS);
   Wire.write(0x00);
   Wire.endTransmission(true);
-  Wire.requestFrom(LM75_ADDRESS, (size_t) 2, true);
+  uint8_t status = Wire.requestFrom(LM75_ADDRESS, (size_t) 2, true);
   int16_t temperature = Wire.read()<<8 | Wire.read();
-  return {temperature};
+  return {status, LM75Data(temperature)};
 }
 
 void LM75Data::print() {
-	Serial.println("===[ LM75 ]===");
-  Serial.print("Temperature: ");
-  Serial.println(this->temperature);
-	Serial.print("\n");
+	printf("===[ LM75 ]===\nTemperature: %d\n\n", this->temperature);
 }

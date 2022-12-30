@@ -7,26 +7,32 @@ MS5Data::MS5Data(int32_t pressure, int32_t temperature) {
     this->temperature = temperature;
 }
 
+MS5Data::MS5Data() {
+    this->pressure = 0;
+    this->temperature = 0;
+}
+
 void MS5Sensor::configure() {
 	uint8_t i;
 	for(i = 0; i <= 7; i++) {
-    Wire.beginTransmission(MS5_ADDRESS);
-    Wire.write(CMD_PROM+(i*2));
-    Wire.endTransmission(true);
-    Wire.requestFrom( MS5_ADDRESS, (size_t) 2, true);
-    uint8_t highByte = Wire.read(); 
-    uint8_t lowByte = Wire.read();
-    this->coefficient[i] = (highByte << 8)|lowByte;
+		Wire.beginTransmission(MS5_ADDRESS);
+		Wire.write(CMD_PROM+(i*2));
+		Wire.endTransmission(true);
+		Wire.requestFrom( MS5_ADDRESS, (size_t) 2, true);
+		uint8_t highByte = Wire.read(); 
+		uint8_t lowByte = Wire.read();
+		this->coefficient[i] = (highByte << 8)|lowByte;
 	}
 }
 
-MS5Data MS5Sensor::getData() {
-  int32_t pressure = this->getMeasurement(PRESSURE);
-  int32_t temperature = this->getMeasurement(TEMPERATURE);
-  return {pressure, temperature};
+DataResult<MS5Data> MS5Sensor::getData() {
+  DataResult<int32_t> pressure = this->getMeasurement(PRESSURE);
+  DataResult<int32_t> temperature = this->getMeasurement(TEMPERATURE);
+  uint8_t status = (pressure.status == 1 && temperature.status == 1) ? 1 : 0;
+  return {status, MS5Data(pressure.data, temperature.data)};
 }
 
-int32_t MS5Sensor::getMeasurement(measurement _measurement) {
+DataResult<int32_t> MS5Sensor::getMeasurement(measurement _measurement) {
   Wire.beginTransmission(MS5_ADDRESS);
   Wire.write(CMD_ADC_CONV+_measurement);
   Wire.endTransmission(true);
@@ -34,16 +40,16 @@ int32_t MS5Sensor::getMeasurement(measurement _measurement) {
   Wire.beginTransmission(MS5_ADDRESS);
   Wire.write(CMD_ADC_READ);
   Wire.endTransmission(true);
-  Wire.requestFrom(MS5_ADDRESS, (size_t) 3, true);
+  uint8_t status = Wire.requestFrom(MS5_ADDRESS, (size_t) 3, true);
   int32_t measurement = ((uint32_t)Wire.read() << 16) + ((uint32_t)Wire.read() << 8) + Wire.read();
-  return measurement;
+  return {status, measurement};
 }
 
 MS5CorrectedData MS5Sensor::correct(MS5Data data) {
-  int32_t temperature_raw = data.temperature;
-	int32_t pressure_raw = data.pressure;
+  	int32_t temperature_raw = data.getTemperature();
+	int32_t pressure_raw = data.getPressure();
 	
-  //Create Variables for calculations
+  	//Create Variables for calculations
 	int32_t temp_calc;
 	int32_t pressure_calc;
 	
@@ -94,18 +100,10 @@ MS5CorrectedData MS5Sensor::correct(MS5Data data) {
 
 	pressure_calc = (((SENS * pressure_raw) / 2097152 ) - OFF) / 32768;
 
-  return {pressure_calc/10.0f, temp_calc/100.0f};
+  	return {pressure_calc/10.0f, temp_calc/100.0f};
 }
 
 void MS5Data::print(MS5CorrectedData corrected) {
-	Serial.println("===[ MS5 ]===");
-	Serial.print("Temperature: ");
-	Serial.println(this->temperature);
-	Serial.print("Pressure: ");
-	Serial.println(this->pressure);
-	Serial.print("Corrected Temperature: ");
-	Serial.println(corrected.temperature);
-	Serial.print("Corrected Pressure: ");
-	Serial.println(corrected.pressure);
-	Serial.print("\n");
+	printf("===[ MS5 ]===\nTemperature: %d\nPressure: %d\nCorrected Temperature: %f\nCorrected Pressure: %f\n\n",
+		this->temperature, this->pressure, corrected.temperature, corrected.pressure);
 }
