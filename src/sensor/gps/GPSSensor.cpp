@@ -39,9 +39,11 @@ void GPSData::print() {
 	Serial.print(this->time.centisecond());
 	Serial.println("cs ");
 	Serial.print("Used Satelites: ");
-	Serial.println(this->satellites.value());
+	Serial.print(this->satellites.value());
+	Serial.println(".00");
 	Serial.print("Visible Satelites: ");
-	Serial.println(this->visibleSatelites);
+	Serial.print(this->visibleSatelites);
+	Serial.println(".00");
 	Serial.print("Date: ");
 	Serial.print(this->date.day());
 	Serial.print(".");
