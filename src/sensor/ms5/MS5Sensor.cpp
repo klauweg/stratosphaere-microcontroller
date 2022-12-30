@@ -7,19 +7,6 @@ MS5Data::MS5Data(int32_t pressure, int32_t temperature) {
     this->temperature = temperature;
 }
 
-void MS5Data::print(MS5CorrectedData corrected) {
-	Serial.println("===[ MS5 ]===");
-	Serial.print("Temperature: ");
-	Serial.println(this->temperature);
-	Serial.print("Pressure: ");
-	Serial.println(this->pressure);
-	Serial.print("Corrected Temperature: ");
-	Serial.println(corrected.temperature);
-	Serial.print("Corrected Pressure: ");
-	Serial.println(corrected.pressure);
-	Serial.print("\n");
-}
-
 void MS5Sensor::configure() {
 	uint8_t i;
 	for(i = 0; i <= 7; i++) {
@@ -108,4 +95,17 @@ MS5CorrectedData MS5Sensor::correct(MS5Data data) {
 	pressure_calc = (((SENS * pressure_raw) / 2097152 ) - OFF) / 32768;
 
   return {pressure_calc/10.0f, temp_calc/100.0f};
+}
+
+void MS5Data::print(MS5CorrectedData corrected) {
+	Serial.println("===[ MS5 ]===");
+	Serial.print("Temperature: ");
+	Serial.println(this->temperature);
+	Serial.print("Pressure: ");
+	Serial.println(this->pressure);
+	Serial.print("Corrected Temperature: ");
+	Serial.println(corrected.temperature);
+	Serial.print("Corrected Pressure: ");
+	Serial.println(corrected.pressure);
+	Serial.print("\n");
 }

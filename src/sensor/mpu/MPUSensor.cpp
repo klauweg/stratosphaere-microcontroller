@@ -18,27 +18,6 @@ MPUData::MPUData(int16_t acc_x,
     this->temperature = temperature;
 }
 
-void MPUData::print() {
-	Serial.println("===[ MPU ]===");
-	Serial.print("Acceleration: ");
-	Serial.print("x: ");
-	Serial.print(this->acc_x);
-	Serial.print(" y: ");
-	Serial.print(this->acc_y);
-	Serial.print(" z: ");
-	Serial.println(this->acc_z);
-	Serial.print("Gyroscope: ");
-	Serial.print("x: ");
-	Serial.print(this->gyro_x);
-	Serial.print(" y: ");
-	Serial.print(this->gyro_y);
-	Serial.print(" z: ");
-	Serial.println(this->gyro_z);
-	Serial.print("Temperature: ");
-	Serial.println(this->temperature);
-	Serial.print("\n");
-}
-
 void MPUSensor::configure() {
   Wire.beginTransmission(MPU_ADDRESS); // I2C Transmission
   Wire.write(0x6B);
@@ -59,4 +38,25 @@ MPUData MPUSensor::getData() {
   int16_t gyro_y = Wire.read()<<8 | Wire.read();
   int16_t gyro_z = Wire.read()<<8 | Wire.read();
   return {acc_x, acc_y, acc_z, gyro_x, gyro_y, gyro_z, temperature/340.00+36.53};
+}
+
+void MPUData::print() {
+	Serial.println("===[ MPU ]===");
+	Serial.print("Acceleration: ");
+	Serial.print("x: ");
+	Serial.print(this->acc_x);
+	Serial.print(" y: ");
+	Serial.print(this->acc_y);
+	Serial.print(" z: ");
+	Serial.println(this->acc_z);
+	Serial.print("Gyroscope: ");
+	Serial.print("x: ");
+	Serial.print(this->gyro_x);
+	Serial.print(" y: ");
+	Serial.print(this->gyro_y);
+	Serial.print(" z: ");
+	Serial.println(this->gyro_z);
+	Serial.print("Temperature: ");
+	Serial.println(this->temperature);
+	Serial.print("\n");
 }

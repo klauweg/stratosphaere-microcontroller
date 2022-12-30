@@ -5,7 +5,6 @@
 #include "sensor/ms5/MS5Sensor.h"
 #include <Arduino.h>
 #include <Wire.h>
-#include "SD_MMC.h"
 
 long lastMillis = 0;
 
@@ -38,7 +37,7 @@ void loop() {
 
   Serial.write(27);       // ESC command
   Serial.print("[2J");    // clear screen command
-  
+
   //hihData.print();
   gpsData.print();
   //lm75Data.print();
