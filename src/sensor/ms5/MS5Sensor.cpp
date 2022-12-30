@@ -35,12 +35,12 @@ DataResult<MS5Data> MS5Sensor::getData() {
 DataResult<int32_t> MS5Sensor::getMeasurement(measurement _measurement) {
   Wire.beginTransmission(MS5_ADDRESS);
   Wire.write(CMD_ADC_CONV+_measurement);
-  Wire.endTransmission(true);
+  uint8_t status = Wire.endTransmission(true) == 5 ? 0 : 1;
   delay(11);
   Wire.beginTransmission(MS5_ADDRESS);
   Wire.write(CMD_ADC_READ);
   Wire.endTransmission(true);
-  uint8_t status = Wire.requestFrom(MS5_ADDRESS, (size_t) 3, true);
+  Wire.requestFrom(MS5_ADDRESS, (size_t) 3, true);
   int32_t measurement = ((uint32_t)Wire.read() << 16) + ((uint32_t)Wire.read() << 8) + Wire.read();
   return {status, measurement};
 }

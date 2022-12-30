@@ -24,8 +24,6 @@ class Sensor {
       if (this->functional || millis() - this->lastTry > 600000) {
         this->lastTry = millis();
         DataResult<D> result = this->getData();
-        Serial.println("result:");
-        Serial.println(result.status);
         if (result.status != 0) { //IF VALID DATA
             this->functional = true;
             return result.data;

@@ -36,17 +36,17 @@ void loop() {
   MPUData mpuData = mpuSensor->measure();
   MS5Data ms5Data = ms5Sensor->measure();
 
-  //Serial.print("\033[f");
+  Serial.print("\033[f");
 
-  //hihData.print();
-  //gpsData.print();
-  //lm75Data.print();
-  //mpuData.print();
-  //ms5Data.print(ms5Sensor->correct(ms5Data));
+  hihData.print();
+  gpsData.print();
+  lm75Data.print();
+  mpuData.print();
+  ms5Data.print(ms5Sensor->correct(ms5Data));
 
   Serial.println("===[ DEBUG ]===");
   Serial.print("Last Tick Duration: ");
-  Serial.println(millis()-lastMillis);
+  Serial.print(millis()-lastMillis);
+  Serial.println(".000");
   Serial.print("\n");
-  delay(10000);
 }
