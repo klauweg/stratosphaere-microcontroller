@@ -20,27 +20,34 @@ void setup() {
   Wire.begin();
   Wire.setClock(100000);
 
-  hihSensor->configure();
+  //hihSensor->configure();
   gpsSensor->configure();
-  lm75Sensor->configure();
+  //lm75Sensor->configure();
   mpuSensor->configure();
   ms5Sensor->configure();
 }
 
 void loop() {
-  Serial.write(27);       // ESC command
-  Serial.print("[2J");    // clear screen command
   lastMillis = millis();
 
-  HIHData hihData = hihSensor->getData();
+  //HIHData hihData = hihSensor->getData();
   GPSData gpsData = gpsSensor->getData();
-  LM75Data lm75Data = lm75Sensor->getData();
+  //LM75Data lm75Data = lm75Sensor->getData();
   MPUData mpuData = mpuSensor->getData();
   MS5Data ms5Data = ms5Sensor->getData();
-  hihData.print();
+
+  Serial.write(27);       // ESC command
+  Serial.print("[2J");    // clear screen command
+  
+  //hihData.print();
   gpsData.print();
-  lm75Data.print();
+  //lm75Data.print();
   mpuData.print();
   ms5Data.print(ms5Sensor->correct(ms5Data));
-  delay(10000);
+
+  Serial.println("===[ DEBUG ]===");
+  Serial.print("Last Tick Duration: ");
+  Serial.println(millis()-lastMillis);
+  Serial.print("\n");
+  delay(120);
 }

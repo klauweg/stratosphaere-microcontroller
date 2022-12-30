@@ -1,5 +1,4 @@
 #include "MPUSensor.h"
-#include <iostream>
 #include <Wire.h>
 #include <Arduino.h>
 
