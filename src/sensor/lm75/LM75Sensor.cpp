@@ -25,5 +25,5 @@ DataResult<LM75Data> LM75Sensor::getData() {
 }
 
 void LM75Data::print() {
-	printf("===[ LM75 ]===\nTemperature: %d\n\n", this->temperature);
+	printf("\n===[ LM75 ]===\033[K\nTemperature: %d\033[K\n\033[K", this->temperature);
 }

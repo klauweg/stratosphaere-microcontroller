@@ -1,5 +1,6 @@
 #include <stdint.h>
 #include <Arduino.h>
+#include <string>
 
 #ifndef SENSOR_H
 #define SENSOR_H
@@ -16,22 +17,22 @@ class Sensor {
   private:
     long lastTry;
     bool functional = true;
-    virtual DataResult<D> getData();
+    virtual DataResult<D> getData() = 0;
   public:
     bool isFunctional() {return this->functional;};
-    void configure(); 
-    D measure() {
+    virtual void configure() = 0; 
+    DataResult<D> measure() {
       if (this->functional || millis() - this->lastTry > 600000) {
         this->lastTry = millis();
         DataResult<D> result = this->getData();
         if (result.status != 0) { //IF VALID DATA
             this->functional = true;
-            return result.data;
+            return result;
         } else {
             this->functional = false;
         }
       }
-      return D();
+      return {0, D()};
     }
 };
 
@@ -40,5 +41,6 @@ class SensorData {
     uint8_t convertLORA();
     void print();
 };
+
 
 #endif

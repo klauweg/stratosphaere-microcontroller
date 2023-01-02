@@ -4,7 +4,7 @@
 
 MPUData::MPUData(int16_t acc_x, int16_t acc_y, int16_t acc_z,
             int16_t gyro_x, int16_t gyro_y, int16_t gyro_z,
-            double temperature = 0) {
+            int16_t temperature = 0) {
     this->acc_x = acc_x; this->acc_y = acc_y; this->acc_z = acc_z;
     this->gyro_x = gyro_x; this->gyro_y = gyro_y; this->gyro_z = gyro_z;
     this->temperature = temperature;
@@ -35,10 +35,10 @@ DataResult<MPUData> MPUSensor::getData() {
   int16_t gyro_x = Wire.read()<<8 | Wire.read();
   int16_t gyro_y = Wire.read()<<8 | Wire.read();
   int16_t gyro_z = Wire.read()<<8 | Wire.read();
-  return {status, MPUData(acc_x, acc_y, acc_z, gyro_x, gyro_y, gyro_z, temperature/340.00+36.53)};
+  return {status, MPUData(acc_x, acc_y, acc_z, gyro_x, gyro_y, gyro_z, temperature)};
 }
 
 void MPUData::print() {
-	printf("===[ MPU ]===\nAcceleration: x: %d y: %d z: %d\nGyroscope: x: %d y: %d z: %d\nTemperature: %f\n\n",
+	printf("\n===[ MPU ]===\033[K\nAcceleration: x: %d y: %d z: %d\033[K\nGyroscope: x: %d y: %d z: %d\033[K\nTemperature: %d\033[K\n\033[K",
     this->acc_x, this->acc_y, this->acc_z, this->gyro_x, this->gyro_y, this->gyro_z, this->temperature);
 }

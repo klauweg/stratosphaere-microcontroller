@@ -25,5 +25,5 @@ DataResult<HIHData> HIHSensor::getData() {
 }
 
 void HIHData::print() {
-	printf("===[ HIH ]===\nTemperature: %d\nHumidity: %d\n\n", this->temperature, this->humidity);
+	printf("\n===[ HIH ]===\033[K\nTemperature: %d\033[K\nHumidity: %d\033[K\n\033[K", this->temperature, this->humidity);
 }

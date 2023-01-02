@@ -1,10 +1,7 @@
-#include "sensor/ms5/MS5Sensor.h"
-#include "sensor/mpu/MPUSensor.h"
-#include "sensor/lm75/LM75Sensor.h"
-#include "sensor/hih/HIHSensor.h"
-#include "sensor/gps/GPSSensor.h"
 #include <Arduino.h>
 #include <Wire.h>
+#include "storage/storage.h"
+
 
 long lastMillis = 0;
 
@@ -19,6 +16,8 @@ void setup() {
   Wire.begin();
   Wire.setClock(100000);
 
+  Storage::configure();
+
   hihSensor->configure();
   gpsSensor->configure();
   lm75Sensor->configure();
@@ -30,23 +29,22 @@ void setup() {
 void loop() {
   lastMillis = millis();
 
-  HIHData hihData = hihSensor->measure();
-  GPSData gpsData = gpsSensor->measure();
-  LM75Data lm75Data = lm75Sensor->measure();
-  MPUData mpuData = mpuSensor->measure();
-  MS5Data ms5Data = ms5Sensor->measure();
+  DataResult<HIHData> hihResult = hihSensor->measure();
+  DataResult<GPSData> gpsResult = gpsSensor->measure();
+  DataResult<LM75Data> lm75Result = lm75Sensor->measure();
+  DataResult<MPUData> mpuResult = mpuSensor->measure();
+  DataResult<MS5Data> ms5Result = ms5Sensor->measure();
 
   Serial.print("\033[f");
 
-  hihData.print();
-  gpsData.print();
-  lm75Data.print();
-  mpuData.print();
-  ms5Data.print(ms5Sensor->correct(ms5Data));
+  gpsResult.data.print();
+  hihResult.data.print();
+  lm75Result.data.print();
+  mpuResult.data.print();
+  ms5Result.data.print(ms5Sensor->correct(ms5Result.data));
 
-  Serial.println("===[ DEBUG ]===");
-  Serial.print("Last Tick Duration: ");
-  Serial.print(millis()-lastMillis);
-  Serial.println(".000");
-  Serial.print("\n");
+  Storage::storeData(gpsResult, hihResult, lm75Result, mpuResult, ms5Result);
+
+  printf("\n===[ DEBUG ]===\033[K\033[K\nLast Tick Duration: %lu\033[K\nCalculated Time in Millis: %u\033[K\n\033[K",
+    millis()-lastMillis, gpsResult.data.time.value()*10+gpsResult.data.time.age());
 }

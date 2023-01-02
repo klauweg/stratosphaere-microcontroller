@@ -4,10 +4,9 @@ const uint8_t MPU_ADDRESS = 0x68;
 
 class MPUData : public SensorData {
     private:
-        int16_t acc_x, acc_y, acc_z, gyro_x, gyro_y, gyro_z;
-        double temperature;
+        int16_t acc_x, acc_y, acc_z, gyro_x, gyro_y, gyro_z, temperature;
     public:
-        MPUData(int16_t, int16_t, int16_t, int16_t, int16_t, int16_t, double);
+        MPUData(int16_t, int16_t, int16_t, int16_t, int16_t, int16_t, int16_t);
         MPUData();
         void print();
         uint8_t convertLORA();
