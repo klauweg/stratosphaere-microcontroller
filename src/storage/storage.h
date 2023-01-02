@@ -14,6 +14,7 @@ class Storage {
         uint8_t storeData(const DataResult<GPSData>&, const DataResult<HIHData>&, const DataResult<LM75Data>&, const DataResult<MPUData>&,const DataResult<MS5Data>&);
     private:
         fs::SDMMCFS *fs;
+        File file;
         std::string fileName = "unknown.png";
         unsigned long lastMountTry = 0;
         bool mountFailed = false;

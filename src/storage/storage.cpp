@@ -15,6 +15,11 @@ uint8_t Storage::configure() {
         return 3;
     }
     this->fileName = "/stratodata-" + std::to_string(fileCount) + ".txt";
+    this->file = this->fs->open("/stratodata-6.txt", FILE_APPEND);
+    if(!file){
+        this->mountFailed = true;
+        return 4;
+    }
     this->mountFailed = false;
     return 1;
 }
@@ -36,11 +41,6 @@ uint8_t Storage::storeData(const DataResult<GPSData>& gpsResult,
             return 5;
         }
     }
-    File file = this->fs->open(this->fileName.c_str(), FILE_APPEND);
-    if(!file){
-        this->mountFailed = true;
-        return 4;
-    }
     /*DATE, TIME, LAT, LNG, ALT, SPEED, COURSE, SATELITES, HUMIDITY,
     //TEMPHUMIDITY, TEMPOUT, ACC_X, ACC_Y, ACC_Z, GYR_X; GYR_Y, GYR_Z, TEMPGYRO, PRESSURE, PRESSURETEMP*/
     char str[300];
@@ -50,8 +50,8 @@ uint8_t Storage::storeData(const DataResult<GPSData>& gpsResult,
         lm75Data.getTemperature(), mpuData.getAccX(), mpuData.getAccY(), mpuData.getAccZ(), mpuData.getGyroX(),
         mpuData.getGyroY(), mpuData.getGyroZ(), mpuData.getTemperature(), ms5Data.getPressure(), ms5Data.getTemperature(),
         gpsResult.status, hihResult.status, lm75Result.status, mpuResult.status, ms5Result.status);
-    file.print(str);
-    file.close();
+    this->file.print(str);
+    this->file.flush();
     return 1;
 }
 

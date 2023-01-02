@@ -62,12 +62,12 @@ void loop() {
   }
   display->setBuffer(buffer);
 
-  Serial.print("\033[f");
+  /*Serial.print("\033[f");
   gpsData.print();
   hihData.print();
   lm75Data.print();
   mpuData.print();
   ms5Data.print(ms5Sensor->correct(ms5Data));
   printf("\n===[ DEBUG ]===\033[K\033[K\nLast Tick Duration: %lu\033[K\nCalculated Time in Millis: %u\033[K\n\033[K",
-    millis()-lastMillis, gpsData.time.value()*10+gpsData.time.age());
+    millis()-lastMillis, gpsData.time.value()*10+gpsData.time.age());*/
 }
