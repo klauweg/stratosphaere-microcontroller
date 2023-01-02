@@ -4,9 +4,9 @@
 #include "display/Display.h"
 
 
-long lastMillis = 0;
+unsigned long lastMillis = 0;
 
-Storage *storage = new Storage();
+Storage *storage = new Storage(&SD_MMC);
 Display *display = new Display();
 
 GPSSensor *gpsSensor = new GPSSensor();

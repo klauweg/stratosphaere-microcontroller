@@ -8,12 +8,14 @@
 
 class Storage {
     public:
+        explicit Storage(fs::SDMMCFS *fs);
         uint8_t configure();
         std::string getFileName() {return this->fileName;};
         uint8_t storeData(DataResult<GPSData>, DataResult<HIHData>, DataResult<LM75Data>, DataResult<MPUData>,DataResult<MS5Data>);
     private:
-        std::string fileName = "";
-        long lastMountTry;
-        bool mountFailed;
+        fs::SDMMCFS *fs;
+        std::string fileName = "unknown.png";
+        unsigned long lastMountTry = 0;
+        bool mountFailed = false;
         int32_t getFileCount();
 };

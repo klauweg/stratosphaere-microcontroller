@@ -1,13 +1,16 @@
 #include "storage.h"
 
+Storage::Storage(fs::SDMMCFS *fileSystem) {
+    this->fs = fileSystem;
+}
 
 uint8_t Storage::configure() {
     this->lastMountTry = millis();
-    SD_MMC.end();
-    if(!SD_MMC.begin("/sdcard", true)){
+    this->fs->end();
+    if(!this->fs->begin("/sdcard", true)){
         return 2;
     }
-    int32_t fileCount = this->getFileCount();
+    int32_t fileCount = Storage::getFileCount();
     if (fileCount == -1) {
         return 3;
     }
@@ -33,7 +36,7 @@ uint8_t Storage::storeData(DataResult<GPSData> gpsResult,
             return 5;
         }
     }
-    File file = SD_MMC.open(fileName.c_str(), FILE_APPEND);
+    File file = this->fs->open(this->fileName.c_str(), FILE_APPEND);
     if(!file){
         this->mountFailed = true;
         return 4;
@@ -41,7 +44,7 @@ uint8_t Storage::storeData(DataResult<GPSData> gpsResult,
     /*DATE, TIME, LAT, LNG, ALT, SPEED, COURSE, SATELITES, HUMIDITY, 
     //TEMPHUMIDITY, TEMPOUT, ACC_X, ACC_Y, ACC_Z, GYR_X; GYR_Y, GYR_Z, TEMPGYRO, PRESSURE, PRESSURETEMP*/
     char str[300];
-    sprintf(str, "%06u, %09u,%f,%f,%f,%f,%f,%u,%d,%d,%d,%d,%d,%d,%d,%d,%d,%f,%d,%d,%u,%u,%u,%u,%u\n",
+    sprintf(str, "%06u, %09u,%f,%f,%f,%d,%f,%u,%d,%d,%d,%d,%d,%d,%d,%d,%d,%f,%d,%d,%u,%u,%u,%u,%u\n",
         gpsData.date.value(), gpsData.time.value()*10+gpsData.time.age(), gpsData.location.lat(), gpsData.location.lng(), gpsData.altitude.meters(), gpsData.speed.value(),
         gpsData.course.deg(), gpsData.satellites.value(), hihData.getHumidity(), hihData.getTemperature(),
         lm75Data.getTemperature(), mpuData.getAccX(), mpuData.getAccY(), mpuData.getAccZ(), mpuData.getGyroX(),
@@ -53,7 +56,7 @@ uint8_t Storage::storeData(DataResult<GPSData> gpsResult,
 }
 
 int32_t Storage::getFileCount() {
-    File root = SD_MMC.open("/");
+    File root = this->fs->open("/");
     if(!root){
         Serial.println("Failed to open directory");
         return -1;
@@ -64,7 +67,7 @@ int32_t Storage::getFileCount() {
     }
 
     File file = root.openNextFile();
-    uint32_t index = 0;
+    int32_t index = 0;
     while(file){
         index++;
         file = root.openNextFile();
