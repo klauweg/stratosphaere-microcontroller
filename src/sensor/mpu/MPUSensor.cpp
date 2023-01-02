@@ -35,7 +35,7 @@ DataResult<MPUData> MPUSensor::getData() {
   int16_t gyro_x = Wire.read()<<8 | Wire.read();
   int16_t gyro_y = Wire.read()<<8 | Wire.read();
   int16_t gyro_z = Wire.read()<<8 | Wire.read();
-  return {status, MPUData(acc_x, acc_y, acc_z, gyro_x, gyro_y, gyro_z, temperature)};
+  return {status == 0 ? 0 : 1, MPUData(acc_x, acc_y, acc_z, gyro_x, gyro_y, gyro_z, temperature)};
 }
 
 void MPUData::print() {

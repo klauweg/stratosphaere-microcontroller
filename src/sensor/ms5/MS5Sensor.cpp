@@ -42,7 +42,7 @@ DataResult<int32_t> MS5Sensor::getMeasurement(measurement _measurement) {
   Wire.endTransmission(true);
   Wire.requestFrom(MS5_ADDRESS, (size_t) 3, true);
   int32_t measurement = ((uint32_t)Wire.read() << 16) + ((uint32_t)Wire.read() << 8) + Wire.read();
-  return {status, measurement};
+  return {status == 0 ? 0 : 1, measurement};
 }
 
 MS5CorrectedData MS5Sensor::correct(MS5Data data) {

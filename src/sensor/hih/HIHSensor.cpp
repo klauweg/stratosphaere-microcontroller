@@ -21,7 +21,7 @@ DataResult<HIHData> HIHSensor::getData() {
   uint8_t status = Wire.requestFrom(HIH_ADDRESS, (size_t) 2*2, true);
   int16_t humidity = Wire.read()<<8 | Wire.read();
   int16_t temperature = Wire.read()<<8 | Wire.read();
-  return {status, HIHData(humidity, temperature)};
+  return {status == 0 ? 0 : 1, HIHData(humidity, temperature)};
 }
 
 void HIHData::print() {
