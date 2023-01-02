@@ -11,7 +11,7 @@ class Storage {
         explicit Storage(fs::SDMMCFS *fs);
         uint8_t configure();
         std::string getFileName() {return this->fileName;};
-        uint8_t storeData(DataResult<GPSData>, DataResult<HIHData>, DataResult<LM75Data>, DataResult<MPUData>,DataResult<MS5Data>);
+        uint8_t storeData(const DataResult<GPSData>&, const DataResult<HIHData>&, const DataResult<LM75Data>&, const DataResult<MPUData>&,const DataResult<MS5Data>&);
     private:
         fs::SDMMCFS *fs;
         std::string fileName = "unknown.png";

@@ -19,11 +19,11 @@ uint8_t Storage::configure() {
     return 1;
 }
 
-uint8_t Storage::storeData(DataResult<GPSData> gpsResult, 
-        DataResult<HIHData> hihResult, 
-        DataResult<LM75Data> lm75Result, 
-        DataResult<MPUData> mpuResult,
-        DataResult<MS5Data> ms5Result) {
+uint8_t Storage::storeData(const DataResult<GPSData>& gpsResult,
+        const DataResult<HIHData>& hihResult,
+        const DataResult<LM75Data>& lm75Result,
+        const DataResult<MPUData>& mpuResult,
+        const DataResult<MS5Data>& ms5Result) {
     GPSData gpsData = gpsResult.data;
     HIHData hihData = hihResult.data;
     LM75Data lm75Data = lm75Result.data;
@@ -41,7 +41,7 @@ uint8_t Storage::storeData(DataResult<GPSData> gpsResult,
         this->mountFailed = true;
         return 4;
     }
-    /*DATE, TIME, LAT, LNG, ALT, SPEED, COURSE, SATELITES, HUMIDITY, 
+    /*DATE, TIME, LAT, LNG, ALT, SPEED, COURSE, SATELITES, HUMIDITY,
     //TEMPHUMIDITY, TEMPOUT, ACC_X, ACC_Y, ACC_Z, GYR_X; GYR_Y, GYR_Z, TEMPGYRO, PRESSURE, PRESSURETEMP*/
     char str[300];
     sprintf(str, "%06u, %09u,%f,%f,%f,%d,%f,%u,%d,%d,%d,%d,%d,%d,%d,%d,%d,%f,%d,%d,%u,%u,%u,%u,%u\n",
