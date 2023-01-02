@@ -11,9 +11,7 @@ uint8_t Storage::configure() {
     if (fileCount == -1) {
         return 3;
     }
-    if (this->fileName == "") {
-        this->fileName = "/stratodata-" + std::to_string(fileCount) + ".txt";
-    }
+    this->fileName = "/stratodata-" + std::to_string(fileCount) + ".txt";
     this->mountFailed = false;
     return 1;
 }

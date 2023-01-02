@@ -24,7 +24,6 @@ void setup() {
 
   display->configure();
   sdStatus = storage->configure();
-  display->setSdStatus(sdStatus);
 
   gpsSensor->configure();
   hihSensor->configure();
@@ -43,23 +42,32 @@ void loop() {
   DataResult<MPUData> mpuResult = mpuSensor->measure();
   DataResult<MS5Data> ms5Result = ms5Sensor->measure();
 
+  GPSData gpsData = gpsResult.data;
+  HIHData hihData = hihResult.data;
+  LM75Data lm75Data = lm75Result.data;
+  MPUData mpuData = mpuResult.data;
+  MS5Data ms5Data = ms5Result.data;
 
   sdStatus = storage->storeData(gpsResult, hihResult, lm75Result, mpuResult, ms5Result);
-  display->setSensorStatus(gpsResult.status << 4 | hihResult.status << 3 | lm75Result.status << 2 | mpuResult.status << 1 | ms5Result.status);
-  display->setSdStatus(sdStatus);
-  display->setUsedSatelliteStatus(gpsResult.data.satellites.value());
-  display->setAvSatelliteStatus(gpsResult.data.getVisibleSatellites());
-  display->setFileName(storage->getFileName());
+  
+  char buffer [300];
+  if (millis() % 20000 < 10000) {
+    sprintf(buffer, "Lora: %u SD: %u\nSensor: %u\nUSat: %u ASat: %u\n%s",
+          0, sdStatus, gpsResult.status << 4 | hihResult.status << 3 | lm75Result.status << 2 | mpuResult.status << 1 | ms5Result.status, gpsData.satellites.value(), 
+          gpsData.getVisibleSatellites(), storage->getFileName().c_str());
+  } else {
+    sprintf(buffer, "OTemp: %u\nDate: %u.%u.%u\nTime: %u.%u.%u\nLat: %2.4f\nLng: %2.4f",
+      lm75Data.getTemperature(), gpsData.date.day(), gpsData.date.month(), gpsData.date.year(),
+      gpsData.time.hour(), gpsData.time.minute(), gpsData.time.second(), gpsData.location.lat(), gpsData.location.lng());
+  }
+  display->setBuffer(buffer);
 
   Serial.print("\033[f");
-  Serial.println(gpsResult.status << 4 | hihResult.status << 3 | lm75Result.status << 2 | mpuResult.status << 1 | ms5Result.status);
-
-  gpsResult.data.print();
-  hihResult.data.print();
-  lm75Result.data.print();
-  mpuResult.data.print();
-  ms5Result.data.print(ms5Sensor->correct(ms5Result.data));
-
+  gpsData.print();
+  hihData.print();
+  lm75Data.print();
+  mpuData.print();
+  ms5Data.print(ms5Sensor->correct(ms5Data));
   printf("\n===[ DEBUG ]===\033[K\033[K\nLast Tick Duration: %lu\033[K\nCalculated Time in Millis: %u\033[K\n\033[K",
-    millis()-lastMillis, gpsResult.data.time.value()*10+gpsResult.data.time.age());
+    millis()-lastMillis, gpsData.time.value()*10+gpsData.time.age());
 }

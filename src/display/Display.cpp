@@ -8,47 +8,15 @@ void Display::configure() {
     this->render();
 }
 
-void Display::setLorawanStatus(uint8_t status) {
-    if (status == this->lorawanStatus) return;
-    this->lorawanStatus = status;
-    this->render();
-}
-
-void Display::setUsedSatelliteStatus(uint32_t status) {
-    if (status == this->usedsatellites) return;
-    this->usedsatellites = status;
-    this->render();
-}
-
-void Display::setAvSatelliteStatus(uint8_t status) {
-    if (status == this->avsatellites) return;
-    this->avsatellites = status;
-    this->render();
-}
-
-void Display::setSensorStatus(uint16_t status) {
-    if (status == this->sensorStatus) return;
-    this->sensorStatus = status;
-    this->render();
-}
-
-void Display::setSdStatus(uint8_t status) {
-    if (status == this->sdStatus) return;
-    this->sdStatus = status;
-    this->render();
-}
-
-void Display::setFileName(std::string name) {
-    if (name == this->fileName) return;
-    this->fileName = name;
+void Display::setBuffer(std::string buff) {
+    if (buff == this->buffer) return;
+    this->buffer = buff;
     this->render();
 }
 
 void Display::render() {
     this->disp->clearDisplay();
     this->disp->setCursor(0, 0);
-    this->disp->printf("Lora: %u SD: %u\nSensor: %u\nUSat: %u ASat: %u\n%s\nMillis: %lu",
-        this->lorawanStatus, this->sdStatus, this->sensorStatus, this->usedsatellites, 
-        this->avsatellites, this->fileName.c_str(), millis());
+    this->disp->print(this->buffer.c_str());
     this->disp->display();
 }
