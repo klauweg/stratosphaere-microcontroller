@@ -7,6 +7,6 @@ class Display {
         std::string buffer;
         void render();
     public:
-        void setBuffer(std::string buffer);
+        void setBuffer(const std::string& buffer);
         void configure();
 };

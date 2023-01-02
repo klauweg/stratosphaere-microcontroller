@@ -1,6 +1,5 @@
 #include "MPUSensor.h"
 #include <Wire.h>
-#include <Arduino.h>
 
 MPUData::MPUData(int16_t acc_x, int16_t acc_y, int16_t acc_z,
             int16_t gyro_x, int16_t gyro_y, int16_t gyro_z,
@@ -35,10 +34,14 @@ DataResult<MPUData> MPUSensor::getData() {
   int16_t gyro_x = Wire.read()<<8 | Wire.read();
   int16_t gyro_y = Wire.read()<<8 | Wire.read();
   int16_t gyro_z = Wire.read()<<8 | Wire.read();
-  return {status == 0 ? 0 : 1, MPUData(acc_x, acc_y, acc_z, gyro_x, gyro_y, gyro_z, temperature)};
+  return {static_cast<uint8_t>(status == 0 ? 0 : 1), MPUData(acc_x, acc_y, acc_z, gyro_x, gyro_y, gyro_z, temperature)};
 }
 
 void MPUData::print() {
 	printf("\n===[ MPU ]===\033[K\nAcceleration: x: %d y: %d z: %d\033[K\nGyroscope: x: %d y: %d z: %d\033[K\nTemperature: %d\033[K\n\033[K",
     this->acc_x, this->acc_y, this->acc_z, this->gyro_x, this->gyro_y, this->gyro_z, this->temperature);
+}
+
+uint8_t MPUData::convertLORA() {
+    return 0;
 }

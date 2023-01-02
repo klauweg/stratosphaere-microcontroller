@@ -1,4 +1,4 @@
-#include <stdint.h>
+#include <cstdint>
 #include <Arduino.h>
 #include <string>
 
@@ -15,7 +15,7 @@ struct DataResult {
 template <typename D>
 class Sensor {
   private:
-    long lastTry;
+    long lastTry = 0;
     bool functional = true;
     virtual DataResult<D> getData() = 0;
   public:
@@ -38,8 +38,8 @@ class Sensor {
 
 class SensorData {
   public:
-    uint8_t convertLORA();
-    void print();
+    virtual uint8_t convertLORA() = 0;
+    virtual void print() = 0;
 };
 
 

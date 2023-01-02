@@ -8,7 +8,7 @@ void Display::configure() {
     this->render();
 }
 
-void Display::setBuffer(std::string buff) {
+void Display::setBuffer(const std::string& buff) {
     if (buff == this->buffer) return;
     this->buffer = buff;
     this->render();

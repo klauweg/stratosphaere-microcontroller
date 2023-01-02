@@ -6,16 +6,16 @@ class LM75Data : public SensorData {
     private:
         int16_t temperature;
     public:
-        LM75Data(int16_t);
+        explicit LM75Data(int16_t);
         LM75Data();
-        void print();
-        uint8_t convertLORA();
-        int16_t getTemperature() {return this->temperature;};
+        void print() override;
+        uint8_t convertLORA() override;
+        int16_t getTemperature() const {return this->temperature;};
 };
 
 class LM75Sensor : public Sensor<LM75Data> {
     protected:
-        DataResult<LM75Data> getData();
+        DataResult<LM75Data> getData() override;
     public:
-        void configure();
+        void configure() override;
 };
