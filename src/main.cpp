@@ -43,10 +43,7 @@ void loop() {
   DataResult<MS5Data> ms5Result = ms5Sensor->measure();
 
   GPSData gpsData = gpsResult.data;
-  HIHData hihData = hihResult.data;
   LM75Data lm75Data = lm75Result.data;
-  MPUData mpuData = mpuResult.data;
-  MS5Data ms5Data = ms5Result.data;
 
   sdStatus = storage->storeData(gpsResult, hihResult, lm75Result, mpuResult, ms5Result);
   

@@ -15,7 +15,7 @@ uint8_t Storage::configure() {
         return 3;
     }
     this->fileName = "/stratodata-" + std::to_string(fileCount) + ".txt";
-    this->file = this->fs->open("/stratodata-6.txt", FILE_APPEND);
+    this->file = this->fs->open(this->fileName.c_str(), FILE_APPEND);
     if(!file){
         this->mountFailed = true;
         return 4;
