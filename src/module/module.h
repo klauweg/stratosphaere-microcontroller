@@ -10,7 +10,7 @@ class Module {
     public:
         virtual void configure() = 0;
         virtual void tick() = 0;
-        uint8_t getStatus() {return this->status;};
+        uint8_t getStatus() const {return this->status;};
 };
 
 #endif
