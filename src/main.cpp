@@ -39,10 +39,10 @@ void setup() {
 
     Serial.print("\033[2J");    // clear screen command
 }
-
+unsigned long lastMillis = 0;
 void loop() {
     if (lora->canWork(250)) {
-        unsigned long lastMillis = millis();
+        lastMillis = millis();
         Serial.print("\033[f");
 
         gpsSensor->tick();
@@ -55,7 +55,7 @@ void loop() {
         lora->tick();
         display->tick();
 
-        printf("\n===[ DEBUG ]===\033[K\033[K\nLast Tick Duration: %lu\033[K\n\033[K", millis() - lastMillis);
+        printf("\n===[ DEBUG ]===\033[K\033[K\nTick Duration: %lu\033[K\n\033[K", millis() - lastMillis);
     }
     os_runloop_once();
 }
