@@ -6,6 +6,7 @@ namespace Lora {
         os_init_ex(&lmic_pins);
         // Reset the MAC state. Session and pending data transfers will be discarded.
         LMIC_reset();
+        LMIC_startJoining();
     }
 
     void LoraSensor::sendData(GPSData& gpsData, HIHData& hihData, LM75Data& lm75Data, MS5CorrectedData& ms5Data) {
