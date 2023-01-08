@@ -43,18 +43,17 @@ unsigned long lastMillis = 0;
 void loop() {
     if (lora->canWork(250)) {
         lastMillis = millis();
-        Serial.print("\033[f");
 
         gpsSensor->tick();
         lm75Sensor->tick();
         hihSensor->tick();
-        ms5Sensor->tick();
         mpuSensor->tick();
         ms5Sensor->tick();
         storage->tick();
         lora->tick();
         display->tick();
 
+        Serial.print("\033[f");
         printf("\n===[ DEBUG ]===\033[K\033[K\nTick Duration: %lu\033[K\n\033[K", millis() - lastMillis);
     }
     os_runloop_once();

@@ -24,13 +24,13 @@ void Display::tick() {
                 gpsData.time.hour(), gpsData.time.minute(), gpsData.time.second(), gpsData.location.lat(),
                 gpsData.location.lng());
     }
-    gpsData.print();
+    this->setBuffer(newbuffer);
+    /*gpsData.print();
     this->hihSensor->getData().print();
     lm75Data.print();
     this->mpuSensor->getData().print();
     this->ms5Sensor->getData().print();
-    this->ms5Sensor->getData().print(this->ms5Sensor->getCorrectedData());
-    this->setBuffer(newbuffer);
+    this->ms5Sensor->getData().print(this->ms5Sensor->getCorrectedData());*/
 }
 
 void Display::setBuffer(const std::string& buff) {
