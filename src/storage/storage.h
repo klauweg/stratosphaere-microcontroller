@@ -4,15 +4,22 @@
 #include "sensor/lm75/LM75Sensor.h"
 #include "sensor/hih/HIHSensor.h"
 #include "sensor/gps/GPSSensor.h"
-#include <string>
 
-class Storage {
+#ifndef STORAGE_H
+#define STORAGE_H
+
+class Storage : public Module {
     public:
-        explicit Storage(fs::SDMMCFS *fs);
-        uint8_t configure();
+        explicit Storage(fs::SDMMCFS *fs, GPSSensor*, LM75Sensor*, HIHSensor*, MPUSensor*, MS5Sensor*);
         std::string getFileName() {return this->fileName;};
-        uint8_t storeData(const DataResult<GPSData>&, const DataResult<HIHData>&, const DataResult<LM75Data>&, const DataResult<MPUData>&,const DataResult<MS5Data>&);
+        void tick() override;
+        void configure() override;
     private:
+        GPSSensor *gpsSensor;
+        LM75Sensor *lm75Sensor;
+        HIHSensor *hihSensor;
+        MPUSensor *mpuSensor;
+        MS5Sensor *ms5Sensor;
         fs::SDMMCFS *fs;
         File file;
         std::string fileName = "unknown.png";
@@ -20,3 +27,5 @@ class Storage {
         bool mountFailed = false;
         int32_t getFileCount();
 };
+
+#endif

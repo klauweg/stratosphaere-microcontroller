@@ -23,7 +23,7 @@ class MPUData : public SensorData {
 
 class MPUSensor : public Sensor<MPUData> {
     protected:
-        DataResult<MPUData> getData() override;
+        void measure() override;
     public:
         void configure() override;
 };

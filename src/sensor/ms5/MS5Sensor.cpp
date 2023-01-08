@@ -5,15 +5,17 @@ MS5Data::MS5Data(int32_t pressure, int32_t temperature) {
     this->pressure = pressure;
     this->temperature = temperature;
 }
-
 MS5Data::MS5Data() {
     this->pressure = 0;
     this->temperature = 0;
 }
-
 MS5CorrectedData::MS5CorrectedData(float pressure, float temperature) {
     this->pressure = pressure;
     this->temperature = temperature;
+}
+MS5CorrectedData::MS5CorrectedData() {
+    this->pressure = 0;
+    this->temperature = 0;
 }
 
 void MS5Sensor::configure() {
@@ -29,29 +31,32 @@ void MS5Sensor::configure() {
 	}
 }
 
-DataResult<MS5Data> MS5Sensor::getData() {
-  DataResult<int32_t> pressure = MS5Sensor::getMeasurement(PRESSURE);
-  DataResult<int32_t> temperature = MS5Sensor::getMeasurement(TEMPERATURE);
-  uint8_t status = (pressure.status == 1 && temperature.status == 1) ? 1 : 0;
-  return {status, MS5Data(pressure.data, temperature.data)};
+void MS5Sensor::measure() {
+  int32_t pressure = MS5Sensor::getMeasurement(PRESSURE);
+  uint8_t pstatus = this->getStatus();
+  int32_t temperature = MS5Sensor::getMeasurement(TEMPERATURE);
+  uint8_t tstatus = this->getStatus();
+  this->status = (pstatus == 1 && tstatus == 1) ? 1 : 0;
+  this->data = MS5Data{pressure, temperature};
+  this->correct();
 }
 
-DataResult<int32_t> MS5Sensor::getMeasurement(measurement _measurement) {
+int32_t MS5Sensor::getMeasurement(measurement _measurement) {
   Wire.beginTransmission(MS5_ADDRESS);
   Wire.write(CMD_ADC_CONV+_measurement);
-  uint8_t status = Wire.endTransmission(true) == 5 ? 0 : 1;
+  this->status = Wire.endTransmission(true) == 0 ? 1 : 0;
   delay(11);
   Wire.beginTransmission(MS5_ADDRESS);
   Wire.write(CMD_ADC_READ);
   Wire.endTransmission(true);
   Wire.requestFrom(MS5_ADDRESS, (size_t) 3, true);
   uint32_t measurement = (Wire.read() << 16) + ((uint32_t)Wire.read() << 8) + Wire.read();
-  return {static_cast<uint8_t>(status == 0 ? 0 : 1), static_cast<int>(measurement)};
+  return measurement;
 }
 
-MS5CorrectedData MS5Sensor::correct(const MS5Data& data) {
-  	int32_t temperature_raw = data.getTemperature();
-	int32_t pressure_raw = data.getPressure();
+void MS5Sensor::correct() {
+  	int32_t temperature_raw = this->data.getTemperature();
+	int32_t pressure_raw = this->data.getPressure();
 	
   	//Create Variables for calculations
 	int32_t temp_calc;
@@ -63,35 +68,28 @@ MS5CorrectedData MS5Sensor::correct(const MS5Data& data) {
 	dT = temperature_raw - ((int32_t)coefficient[5] << 8);
 	temp_calc = (((int32_t)dT * coefficient[6]) >> 23) + 2000;
 	
-	// TODO TESTING  _temperature_actual = temp_calc;
-	
 	//Now we have our first order Temperature, let's calculate the second order.
 	int64_t T3, OFF2, SENS2, OFF, SENS; //working variables
 
-	if (temp_calc < 2000) 
-	// If temp_calc is below 20.0C
-	{
+	if (temp_calc < 2000) {
+        // If temp_calc is below 20.0C
         T3 = 3 * (((int64_t)dT * dT) >> 33);
 		OFF2 = 3 * ((temp_calc - 2000) * (temp_calc - 2000)) / 2;
 		SENS2 = 5 * ((temp_calc - 2000) * (temp_calc - 2000)) / 8;
 		
-		if(temp_calc < -1500)
-		// If temp_calc is below -15.0C 
-		{
+		if(temp_calc < -1500) {
+            // If temp_calc is below -15.0C
 			OFF2 = OFF2 + 7 * ((temp_calc + 1500) * (temp_calc + 1500));
 			SENS2 = SENS2 + 4 * ((temp_calc + 1500) * (temp_calc + 1500));
 		}
-    } 
-	else
-	// If temp_calc is above 20.0C
-	{
+    } else {
+        // If temp_calc is above 20.0C
         T3 = 7 * ((uint64_t)dT * dT) / pow(2, 37);
 		OFF2 = ((temp_calc - 2000) * (temp_calc - 2000)) / 16;
 		SENS2 = 0;
 	}
 	
-	// Now bring it all together to apply offsets 
-	
+	// Now bring it all together to apply offsets
 	OFF = ((int64_t)coefficient[2] << 16) + (((coefficient[4] * (int64_t)dT)) >> 7);
 	SENS = ((int64_t)coefficient[1] << 15) + (((coefficient[3] * (int64_t)dT)) >> 8);
 	
@@ -99,12 +97,10 @@ MS5CorrectedData MS5Sensor::correct(const MS5Data& data) {
 	OFF = OFF - OFF2;
 	SENS = SENS - SENS2;
 
-	// Now lets calculate the pressure
-	
-
+	// Now let's calculate the pressure
 	pressure_calc = ((SENS * pressure_raw) / 2097152 - OFF) / 32768;
 
-  	return {pressure_calc/10.0f, temp_calc/100.0f};
+  	this->correctedData = MS5CorrectedData{pressure_calc/10.0f, temp_calc/100.0f};
 }
 
 void MS5Data::print(MS5CorrectedData corrected) const {

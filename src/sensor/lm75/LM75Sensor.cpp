@@ -15,13 +15,13 @@ void LM75Sensor::configure() {
   Wire.endTransmission(true);
 }
 
-DataResult<LM75Data> LM75Sensor::getData() {
+void LM75Sensor::measure() {
   Wire.beginTransmission(LM75_ADDRESS);
   Wire.write(0x00);
   Wire.endTransmission(true);
-  uint8_t status = Wire.requestFrom(LM75_ADDRESS, (size_t) 2, true);
+  this->status = Wire.requestFrom(LM75_ADDRESS, (size_t) 2, true);
   int16_t temperature = Wire.read()<<8 | Wire.read();
-  return {static_cast<uint8_t>(status == 0 ? 0 : 1), LM75Data(temperature)};
+  this->data = LM75Data(temperature);
 }
 
 void LM75Data::print() {

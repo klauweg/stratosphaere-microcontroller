@@ -6,6 +6,9 @@
 #include <arduino_lmic.h>
 #include "hal/hal.h"
 
+#ifndef LORA_H
+#define LORA_H
+
 namespace Lora {
     const double center_latitude = 49.317;
     const double center_longitude = 11.023;
@@ -14,6 +17,7 @@ namespace Lora {
     const double pressure_factor = 5.859375;
     const double humidity_factor = 0.793650794;
     const double temperature_offset = 90;
+
     // Pin mapping
     const lmic_pinmap lmic_pins = {
             .nss = 18,
@@ -22,15 +26,21 @@ namespace Lora {
             .dio = {26},
     };
 
-    class LoraSensor {
+    class Lora : public Module {
         private:
+            GPSSensor *gpsSensor;
+            LM75Sensor *lm75Sensor;
+            HIHSensor *hihSensor;
+            MS5Sensor *ms5Sensor;
             long lastSent = 0;
             void sendMessage(uint8_t *);
-            void setBits(uint8_t*, uint8_t, uint8_t, uint16_t);
+            static void setBits(uint8_t*, uint8_t, uint8_t, uint16_t);
         public:
-            long getLastSent() {return this->lastSent;};
-            void configure();
+            Lora(GPSSensor*, LM75Sensor*, HIHSensor*, MS5Sensor*);
+            void configure() override;
+            void tick() override;
             bool canWork(uint16_t);
-            void sendData(GPSData&, HIHData&, LM75Data&, MS5CorrectedData&);
     };
 }
+
+#endif

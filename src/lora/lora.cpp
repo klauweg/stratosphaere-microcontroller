@@ -1,7 +1,7 @@
 #include "lora.h"
 
 namespace Lora {
-    void LoraSensor::configure() {
+    void Lora::configure() {
         // LMIC init
         os_init_ex(&lmic_pins);
         // Reset the MAC state. Session and pending data transfers will be discarded.
@@ -9,13 +9,14 @@ namespace Lora {
         LMIC_startJoining();
     }
 
-    void LoraSensor::sendData(GPSData& gpsData, HIHData& hihData, LM75Data& lm75Data, MS5CorrectedData& ms5Data) {
-        double altitude = gpsData.altitude.meters();
-        double latitude = gpsData.location.lat();
-        double longitude = gpsData.location.lng();
-        double pressure = ms5Data.getPressure();
-        int16_t humidity = hihData.getHumidity();
-        int16_t temperature = lm75Data.getTemperature();
+    void Lora::tick() {
+        if (millis() - this->lastSent <= 60000) return;
+        double altitude = gpsSensor->getData().altitude.meters();
+        double latitude = gpsSensor->getData().location.lat();
+        double longitude = gpsSensor->getData().location.lng();
+        double pressure = ms5Sensor->getCorrectedData().getPressure();
+        int16_t humidity = hihSensor->getData().getHumidity();
+        int16_t temperature = lm75Sensor->getData().getTemperature();
         uint16_t raw_altitude = round((altitude + 100)/altitude_factor);
         uint16_t raw_latitude = round((latitude - center_latitude + max_pos_delta) * 1000);
         uint16_t raw_longitude = round((longitude - center_longitude + max_pos_delta) * 1000);
@@ -23,17 +24,24 @@ namespace Lora {
         uint8_t raw_temperature = round(temperature+temperature_offset);
         uint8_t raw_humidity = round(humidity/humidity_factor);
         uint8_t bytes[8] = {0, 0, 0, 0, 0, 0, 0, 0};
-        this->setBits(bytes, 0, 12, raw_altitude);
-        this->setBits(bytes, 12, 15, raw_latitude);
-        this->setBits(bytes, 27, 15, raw_longitude);
-        this->setBits(bytes, 42, 8, raw_pressure);
-        this->setBits(bytes, 50, 7, raw_temperature);
-        this->setBits(bytes, 57, 7, raw_humidity);
+        setBits(bytes, 0, 12, raw_altitude);
+        setBits(bytes, 12, 15, raw_latitude);
+        setBits(bytes, 27, 15, raw_longitude);
+        setBits(bytes, 42, 8, raw_pressure);
+        setBits(bytes, 50, 7, raw_temperature);
+        setBits(bytes, 57, 7, raw_humidity);
         this->sendMessage(bytes);
         this->lastSent = millis();
     }
 
-    void LoraSensor::sendMessage(uint8_t *bytes) {
+    Lora::Lora(GPSSensor *gps, LM75Sensor *lm75, HIHSensor *hih, MS5Sensor *ms5) {
+        this->gpsSensor = gps;
+        this->lm75Sensor = lm75;
+        this->hihSensor = hih;
+        this->ms5Sensor = ms5;
+    }
+
+    void Lora::sendMessage(uint8_t *bytes) {
         // Check if there is not a current TX/RX job running
         if (LMIC.opmode & OP_TXRXPEND) {
             Serial.println(F("OP_TXRXPEND, not sending"));
@@ -45,7 +53,7 @@ namespace Lora {
         // Next TX is scheduled after TX_COMPLETE event.
     }
 
-    void LoraSensor::setBits(uint8_t *array, uint8_t start_bit, uint8_t value_length, uint16_t value) {
+    void Lora::setBits(uint8_t *array, uint8_t start_bit, uint8_t value_length, uint16_t value) {
         for (int i = start_bit; i < start_bit+value_length; i++) {
             const int byteIndex = floor(i/8);
             if (byteIndex >= 8) return;
@@ -58,7 +66,7 @@ namespace Lora {
         }
     }
 
-    bool LoraSensor::canWork(uint16_t millis) {
+    bool Lora::canWork(uint16_t millis) {
         return !os_queryTimeCriticalJobs(ms2osticks(millis));
     }
 }

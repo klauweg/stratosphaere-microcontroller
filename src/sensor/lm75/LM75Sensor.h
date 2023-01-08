@@ -17,7 +17,7 @@ class LM75Data : public SensorData {
 
 class LM75Sensor : public Sensor<LM75Data> {
     protected:
-        DataResult<LM75Data> getData() override;
+        void measure() override;
     public:
         void configure() override;
 };

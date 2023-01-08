@@ -1,39 +1,27 @@
-#include <cstdint>
 #include <Arduino.h>
 #include <string>
+#include "module/module.h"
 
 #ifndef SENSOR_H
 #define SENSOR_H
 
-
-template <class D>
-struct DataResult {
-  uint8_t status;
-  D data;
-};
-
 template <typename D>
-class Sensor {
+class Sensor : public Module {
   private:
     long lastTry = 0;
-    bool functional = true;
-    virtual DataResult<D> getData() = 0;
+    virtual void measure() = 0;
+  protected:
+    D data;
   public:
-    bool isFunctional() {return this->functional;};
-    virtual void configure() = 0; 
-    DataResult<D> measure() {
-      if (this->functional || millis() - this->lastTry > 600000) {
-        this->lastTry = millis();
-        DataResult<D> result = this->getData();
-        if (result.status != 0) { //IF VALID DATA
-            this->functional = true;
-            return result;
-        } else {
-            this->functional = false;
+    Sensor() = default;
+    void configure() override = 0;
+    D getData() {return this->data;};
+    void tick() override {
+        if (this->getStatus() != 0 || millis() - this->lastTry > 600000) {
+            this->lastTry = millis();
+            this->measure();
         }
-      }
-      return {0, D()};
-    }
+    };
 };
 
 class SensorData {

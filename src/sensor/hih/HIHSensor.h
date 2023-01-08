@@ -18,7 +18,7 @@ class HIHData : public SensorData {
 
 class HIHSensor : public Sensor<HIHData> {
     protected:
-        DataResult<HIHData> getData() override;
+        void measure() override;
     public:
         void configure() override;
 };

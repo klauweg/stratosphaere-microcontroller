@@ -21,11 +21,11 @@ class GPSData : public SensorData, public TinyGPSPlus {
 };
 
 class GPSSensor : public Sensor<GPSData> {
-    protected:
-        DataResult<GPSData> getData() override;
-    public:
-        GPSData *gps;
+    private:
         TinyGPSCustom *gpgsv;
+    protected:
+        void measure() override;
+    public:
         void configure() override;
 };
 

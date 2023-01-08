@@ -19,6 +19,7 @@ struct MS5CorrectedData {
         float temperature;
     public:
         MS5CorrectedData(float, float);
+        MS5CorrectedData();
         float getPressure() const {return this->pressure;};
         float getTemperature() const {return this->temperature;};
 };
@@ -38,13 +39,15 @@ class MS5Data : public SensorData {
 
 class MS5Sensor : public Sensor<MS5Data> {
     protected:
-        DataResult<MS5Data> getData() override;
+        void measure() override;
+        MS5CorrectedData correctedData;
     public:
         void configure() override;
-        MS5CorrectedData correct(const MS5Data& data);
+        void correct();
+        MS5CorrectedData getCorrectedData() {return this->correctedData;};
     private:
         uint16_t coefficient[8] = {0};
-        static DataResult<int32_t> getMeasurement(measurement _measurement);
+        int32_t getMeasurement(measurement _measurement);
 };
 
 #endif
