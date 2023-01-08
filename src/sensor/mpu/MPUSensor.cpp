@@ -41,7 +41,3 @@ void MPUData::print() {
 	printf("\n===[ MPU ]===\033[K\nAcceleration: x: %d y: %d z: %d\033[K\nGyroscope: x: %d y: %d z: %d\033[K\nTemperature: %d\033[K\n\033[K",
     this->acc_x, this->acc_y, this->acc_z, this->gyro_x, this->gyro_y, this->gyro_z, this->temperature);
 }
-
-uint8_t MPUData::convertLORA() {
-    return 0;
-}

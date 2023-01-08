@@ -28,7 +28,3 @@ void GPSData::print() {
 		this->location.lat(), this->location.lng(), this->altitude.meters(), this->time.hour(), this->time.minute(), this->time.second(),
 		this->time.centisecond(), this->satellites.value(), this->getVisibleSatellites(), this->date.day(), this->date.month(),this->date.year(), this->speed.kmph());
 }
-
-uint8_t GPSData::convertLORA() {
-    return 0;
-}

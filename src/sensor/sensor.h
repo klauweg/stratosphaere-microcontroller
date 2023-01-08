@@ -38,9 +38,7 @@ class Sensor {
 
 class SensorData {
   public:
-    virtual uint8_t convertLORA() = 0;
     virtual void print() = 0;
 };
-
 
 #endif

@@ -1,5 +1,8 @@
 #include "../sensor.h"
 
+#ifndef MPUSENSOR_H
+#define MPUSENSOR_H
+
 const uint8_t MPU_ADDRESS = 0x68;
 
 class MPUData : public SensorData {
@@ -9,7 +12,6 @@ class MPUData : public SensorData {
         MPUData(int16_t, int16_t, int16_t, int16_t, int16_t, int16_t, int16_t);
         MPUData();
         void print() override;
-        uint8_t convertLORA() override;
         int16_t getAccX() const {return this->acc_x;};
         int16_t getAccY() const {return this->acc_y;};
         int16_t getAccZ() const {return this->acc_z;};
@@ -25,3 +27,5 @@ class MPUSensor : public Sensor<MPUData> {
     public:
         void configure() override;
 };
+
+#endif

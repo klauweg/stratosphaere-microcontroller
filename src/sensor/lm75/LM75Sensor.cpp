@@ -27,7 +27,3 @@ DataResult<LM75Data> LM75Sensor::getData() {
 void LM75Data::print() {
 	printf("\n===[ LM75 ]===\033[K\nTemperature: %d\033[K\n\033[K", this->temperature);
 }
-
-uint8_t LM75Data::convertLORA() {
-    return 0;
-}

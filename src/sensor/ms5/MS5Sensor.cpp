@@ -11,6 +11,11 @@ MS5Data::MS5Data() {
     this->temperature = 0;
 }
 
+MS5CorrectedData::MS5CorrectedData(float pressure, float temperature) {
+    this->pressure = pressure;
+    this->temperature = temperature;
+}
+
 void MS5Sensor::configure() {
 	uint8_t i;
 	for(i = 0; i <= 7; i++) {
@@ -104,9 +109,5 @@ MS5CorrectedData MS5Sensor::correct(const MS5Data& data) {
 
 void MS5Data::print(MS5CorrectedData corrected) const {
 	printf("\n===[ MS5 ]===\033[K\nTemperature: %d\033[K\nPressure: %d\033[K\nCorrected Temperature: %f\033[K\nCorrected Pressure: %f\033[K\n\033[K",
-		this->temperature, this->pressure, corrected.temperature, corrected.pressure);
-}
-
-uint8_t MS5Data::convertLORA() {
-    return 0;
+		this->temperature, this->pressure, corrected.getTemperature(), corrected.getPressure());
 }

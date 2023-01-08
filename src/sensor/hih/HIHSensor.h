@@ -1,5 +1,8 @@
 #include "../sensor.h"
 
+#ifndef HIHSENSOR_H
+#define HIHSENSOR_H
+
 const uint8_t HIH_ADDRESS = 0x27;
 
 class HIHData : public SensorData {
@@ -9,7 +12,6 @@ class HIHData : public SensorData {
         HIHData(int16_t, int16_t);
         HIHData();
         void print() override;
-        uint8_t convertLORA() override;
         int16_t getHumidity() const {return this->humidity;};
         int16_t getTemperature() const {return this->temperature;};
 };
@@ -20,3 +22,5 @@ class HIHSensor : public Sensor<HIHData> {
     public:
         void configure() override;
 };
+
+#endif

@@ -1,6 +1,9 @@
 #include "../sensor.h"
 #include "TinyGPS++.h"
 
+#ifndef GPSSENSOR_H
+#define GPSSENSOR_H
+
 class GPSData : public SensorData, public TinyGPSPlus {
     private:
         uint8_t visibleSatellites = 0;
@@ -8,7 +11,6 @@ class GPSData : public SensorData, public TinyGPSPlus {
         uint32_t realLastUpdated = 0;
     public:
         void print() override;
-        uint8_t convertLORA() override;
         void setVisibleSatellites(uint8_t count) {this->visibleSatellites = count;};
         void setLastUpdateTime(uint32_t time) {this->lastUpdateTime = time;};
         void setRealLastUpdated(uint32_t millis) {this->realLastUpdated = millis;};
@@ -26,3 +28,5 @@ class GPSSensor : public Sensor<GPSData> {
         TinyGPSCustom *gpgsv;
         void configure() override;
 };
+
+#endif

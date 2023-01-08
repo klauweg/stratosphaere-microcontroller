@@ -1,5 +1,8 @@
 #include "../sensor.h"
 
+#ifndef MS5SENSOR_H
+#define MS5SENSOR_H
+
 const uint8_t MS5_ADDRESS = 0x76;
 const uint8_t CMD_ADC_READ = 0x00;
 const uint8_t CMD_ADC_CONV = 0x48;
@@ -11,8 +14,13 @@ enum measurement {
 };
 
 struct MS5CorrectedData {
-    float pressure;
-    float temperature;
+    private:
+        float pressure;
+        float temperature;
+    public:
+        MS5CorrectedData(float, float);
+        float getPressure() const {return this->pressure;};
+        float getTemperature() const {return this->temperature;};
 };
 
 class MS5Data : public SensorData {
@@ -24,7 +32,6 @@ class MS5Data : public SensorData {
         MS5Data();
         void print() override {};
         void print(MS5CorrectedData corrected) const;
-        uint8_t convertLORA() override;
         int32_t getPressure() const {return this->pressure;};
         int32_t getTemperature() const {return this->temperature;};
 };
@@ -39,3 +46,5 @@ class MS5Sensor : public Sensor<MS5Data> {
         uint16_t coefficient[8] = {0};
         static DataResult<int32_t> getMeasurement(measurement _measurement);
 };
+
+#endif
