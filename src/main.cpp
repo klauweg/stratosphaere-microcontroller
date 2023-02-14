@@ -54,7 +54,7 @@ void loop() {
         display->tick();
 
         Serial.print("\033[f");
-        printf("\n===[ DEBUG ]===\033[K\033[K\nTick Duration: %lu\033[K\n\033[K", millis() - lastMillis);
+        printf("\n===[ DEBUG ]===\033[K\033[K\nTick Duration: %lu\033[K\n\033[K\n", millis() - lastMillis);
     }
     os_runloop_once();
 }

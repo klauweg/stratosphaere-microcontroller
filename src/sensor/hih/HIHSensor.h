@@ -5,21 +5,36 @@
 
 const uint8_t HIH_ADDRESS = 0x27;
 
+struct HIHCorrectedData {
+private:
+    float humidity;
+    float temperature;
+public:
+    HIHCorrectedData(float, float);
+    HIHCorrectedData();
+    float getHumidity() const {return this->humidity;};
+    float getTemperature() const {return this->temperature;};
+};
+
 class HIHData : public SensorData {
     private:
-        int16_t humidity, temperature;
+        uint16_t humidity, temperature;
     public:
-        HIHData(int16_t, int16_t);
+        HIHData(uint16_t, uint16_t);
         HIHData();
-        void print() override;
-        int16_t getHumidity() const {return this->humidity;};
-        int16_t getTemperature() const {return this->temperature;};
+        void print() override {};
+        void print(HIHCorrectedData corrected) const;
+        uint16_t getHumidity() const {return this->humidity;};
+        uint16_t getTemperature() const {return this->temperature;};
 };
 
 class HIHSensor : public Sensor<HIHData> {
     protected:
+        HIHCorrectedData correctedData;
         void measure() override;
     public:
+        HIHCorrectedData getCorrectedData() {return this->correctedData;};
+        void correct();
         void configure() override;
 };
 
