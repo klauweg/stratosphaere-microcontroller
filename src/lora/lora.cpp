@@ -10,7 +10,7 @@ namespace Lora {
     }
 
     void Lora::tick() {
-        if (millis() - this->lastSent <= 60000) return;
+        if (millis() - this->lastSent <= 2000) return;
         double altitude = gpsSensor->getData().altitude.meters();
         double latitude = gpsSensor->getData().location.lat();
         double longitude = gpsSensor->getData().location.lng();
@@ -22,6 +22,8 @@ namespace Lora {
         uint16_t raw_longitude = round((longitude - center_longitude + max_pos_delta) * 1000);
         uint8_t raw_pressure = round((pressure/10)/pressure_factor);
         uint8_t raw_temperature = round(temperature/2+temperature_offset);
+Serial.println( "abcdefg" );
+Serial.println( raw_temperature );
         uint8_t raw_humidity = round(humidity/humidity_factor);
         uint8_t bytes[8] = {0, 0, 0, 0, 0, 0, 0, 0};
         setBits(bytes, 0, 12, raw_altitude);
@@ -30,6 +32,9 @@ namespace Lora {
         setBits(bytes, 42, 8, raw_pressure);
         setBits(bytes, 50, 7, raw_temperature);
         setBits(bytes, 57, 7, raw_humidity);
+      for ( int i=0; i<8; i++ )
+         Serial.printf( "%02x", bytes[i] );
+      Serial.println();
         this->sendMessage(bytes);
         this->lastSent = millis();
     }

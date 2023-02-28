@@ -53,8 +53,8 @@ void loop() {
         lora->tick();
         display->tick();
 
-        Serial.print("\033[f");
-        printf("\n===[ DEBUG ]===\033[K\033[K\nTick Duration: %lu\033[K\n\033[K\n", millis() - lastMillis);
+//        Serial.print("\033[f");
+//        printf("\n===[ DEBUG ]===\033[K\033[K\nTick Duration: %lu\033[K\n\033[K\n", millis() - lastMillis);
     }
     os_runloop_once();
 }
