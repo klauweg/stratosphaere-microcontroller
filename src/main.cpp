@@ -4,6 +4,7 @@
 #include "display/Display.h"
 #include "lora/lora.h"
 
+
 //lsb
 static const u1_t PROGMEM APPEUI[8]={ 0xBB, 0xCD, 0x1A, 0xF9, 0xEB, 0x1A, 0x92, 0xAB };
 void os_getArtEui (u1_t* buf) { memcpy_P(buf, APPEUI, 8);}
@@ -25,6 +26,7 @@ Display *display = new Display(gpsSensor, lm75Sensor, hihSensor, mpuSensor, ms5S
 
 void setup() {
     Serial.begin(115200);
+
     Wire.begin();
     Wire.setClock(100000);
 
@@ -34,7 +36,7 @@ void setup() {
     mpuSensor->configure();
     ms5Sensor->configure();
     lora->configure();
-    storage->configure();
+//    storage->configure();
     display->configure();
 
     Serial.print("\033[2J");    // clear screen command
@@ -44,12 +46,14 @@ void loop() {
     if (lora->canWork(250)) {
         lastMillis = millis();
 
+sleep(2);
+
         gpsSensor->tick();
         lm75Sensor->tick();
         hihSensor->tick();
         mpuSensor->tick();
         ms5Sensor->tick();
-        storage->tick();
+//        storage->tick();
         lora->tick();
         display->tick();
 

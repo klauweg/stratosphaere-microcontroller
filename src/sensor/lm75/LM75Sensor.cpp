@@ -1,6 +1,7 @@
 #include "LM75Sensor.h"
 #include <Wire.h>
 
+#include "debug.h"
 
 LM75CorrectedData::LM75CorrectedData(float temperature) {
     this->temperature = temperature;
@@ -31,9 +32,11 @@ void LM75Sensor::measure() {
   temperature = temperature >> 7;
   this->data = LM75Data(temperature);
   this->correct();
+  binprint( temperature );
 }
 
 void LM75Sensor::correct() {
+   ///////// warum uint!?!?!?!?
     uint16_t temperature = this->getData().getTemperature();
     this->correctedData = LM75CorrectedData{temperature/2.0f};
 }

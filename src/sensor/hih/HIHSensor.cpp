@@ -27,6 +27,7 @@ void HIHSensor::measure() {
     humidity = humidity & 0x3fff;
     uint16_t temperature = Wire.read()<<8 | Wire.read();
     temperature = temperature >> 2;
+// shift mit vorzeichen hier ok?
     this->data = HIHData(humidity, temperature);
     Wire.beginTransmission(HIH_ADDRESS);
     Wire.endTransmission(true);

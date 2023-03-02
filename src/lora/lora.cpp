@@ -21,6 +21,7 @@ namespace Lora {
         uint16_t raw_latitude = round((latitude - center_latitude + max_pos_delta) * 1000);
         uint16_t raw_longitude = round((longitude - center_longitude + max_pos_delta) * 1000);
         uint8_t raw_pressure = round((pressure/10)/pressure_factor);
+        // ich gehe davon aus dass hier keine negativen Temperaturen funktionieren:
         uint8_t raw_temperature = round(temperature/2+temperature_offset);
 Serial.println( "abcdefg" );
 Serial.println( raw_temperature );

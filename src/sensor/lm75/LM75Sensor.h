@@ -5,6 +5,7 @@
 
 const uint8_t LM75_ADDRESS = 0x4f;
 
+//// warum hier struct??????
 struct LM75CorrectedData {
 private:
     float temperature;
