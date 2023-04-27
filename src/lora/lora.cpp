@@ -21,7 +21,7 @@ namespace Lora {
         uint16_t raw_latitude = round((latitude - center_latitude + max_pos_delta) * 1000);
         uint16_t raw_longitude = round((longitude - center_longitude + max_pos_delta) * 1000);
         uint8_t raw_pressure = round((pressure/10)/pressure_factor);
-        uint8_t raw_temperature = round(temperature/2+temperature_offset);
+        uint8_t raw_temperature = round(temperature/2.0f+temperature_offset);
         uint8_t raw_humidity = round(humidity/humidity_factor);
         uint8_t bytes[8] = {0, 0, 0, 0, 0, 0, 0, 0};
         setBits(bytes, 0, 12, raw_altitude);

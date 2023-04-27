@@ -18,7 +18,7 @@ class MPUData : public SensorData {
         int16_t getGyroX() const {return this->gyro_x;};
         int16_t getGyroY() const {return this->gyro_y;};
         int16_t getGyroZ() const {return this->gyro_z;};
-        double getTemperature() const {return this->temperature;};
+        int16_t getTemperature() const {return this->temperature;};
 };
 
 class MPUSensor : public Sensor<MPUData> {

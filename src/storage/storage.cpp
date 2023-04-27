@@ -43,8 +43,8 @@ void Storage::tick() {
         }
     }
     char str[300];
-    sprintf(str, "%06u, %09u,%f,%f,%f,%d,%f,%u,%d,%d,%d,%d,%d,%d,%d,%d,%d,%f,%d,%d,%u,%u,%u,%u,%u\n",
-            gpsData.date.value(), gpsData.time.value()*10+gpsData.time.age(), gpsData.location.lat(), gpsData.location.lng(), gpsData.altitude.meters(), gpsData.speed.value(),
+    sprintf(str, "%lu,%06u,%09u,%f,%f,%f,%d,%f,%u,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%u,%u,%u,%u,%u\n",
+            millis(), gpsData.date.value(), gpsData.time.value(), gpsData.location.lat(), gpsData.location.lng(), gpsData.altitude.meters(), gpsData.speed.value(),
             gpsData.course.deg(), gpsData.satellites.value(), hihData.getHumidity(), hihData.getTemperature(),
             lm75Data.getTemperature(), mpuData.getAccX(), mpuData.getAccY(), mpuData.getAccZ(), mpuData.getGyroX(),
             mpuData.getGyroY(), mpuData.getGyroZ(), mpuData.getTemperature(), ms5Data.getPressure(), ms5Data.getTemperature(),

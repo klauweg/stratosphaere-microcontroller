@@ -34,7 +34,7 @@ void LM75Sensor::measure() {
 }
 
 void LM75Sensor::correct() {
-    uint16_t temperature = this->getData().getTemperature();
+    int16_t temperature = this->getData().getTemperature();
     this->correctedData = LM75CorrectedData{temperature/2.0f};
 }
 
