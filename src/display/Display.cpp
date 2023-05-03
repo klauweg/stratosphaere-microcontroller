@@ -11,18 +11,32 @@ void Display::configure() {
 void Display::tick() {
     GPSData gpsData = this->gpsSensor->getData();
     LM75Data lm75Data = this->lm75Sensor->getData();
+    HIHCorrectedData hihData = this->hihSensor->getCorrectedData();
     char newbuffer[300];
     if (millis() % 20000 < 10000) {
-        sprintf(newbuffer, "Lora: %u SD: %u\nSensor: %u\nUSat: %u ASat: %u\n%s",
-                0, this->storage->getStatus(),
-                this->gpsSensor->getStatus() << 4 | this->hihSensor->getStatus() << 3 | this->lm75Sensor->getStatus() << 2 |
-                this->mpuSensor->getStatus() << 1 | this->ms5Sensor->getStatus(), gpsData.satellites.value(),
-                gpsData.getVisibleSatellites(), this->storage->getFileName().c_str());
+        sprintf(newbuffer, "GPS: %2.2f %2.2f %u\n"
+                           "LM: %.1f\n"
+                           "HIH: %.1f %.0f\n"
+                           "MPU: %d %d\n"
+                           "MS5: %.3f %.1f",
+                gpsData.location.lat(), gpsData.location.lng(), gpsData.time.second(),
+                this->lm75Sensor->getCorrectedData().getTemperature(),
+                hihData.getTemperature(), hihData.getHumidity(),
+                this->mpuSensor->getData().getGyroX(), this->mpuSensor->getData().getAccX(),
+                this->ms5Sensor->getCorrectedData().getPressure(), this->ms5Sensor->getCorrectedData().getTemperature()
+        );
     } else {
-        sprintf(newbuffer, "OTemp: %u\nDate: %u.%u.%u\nTime: %u.%u.%u\nLat: %2.4f\nLng: %2.4f",
-                lm75Data.getTemperature(), gpsData.date.day(), gpsData.date.month(), gpsData.date.year(),
-                gpsData.time.hour(), gpsData.time.minute(), gpsData.time.second(), gpsData.location.lat(),
-                gpsData.location.lng());
+        sprintf(newbuffer, "GPS: %2.2f %2.2f %u\n"
+                           "LM: %.1f\n"
+                           "HIH: %.1f %.0f\n"
+                           "MPU: %d %d\n"
+                           "MS5: %.3f %.1f",
+            gpsData.location.lat(), gpsData.location.lng(), gpsData.time.second(),
+            this->lm75Sensor->getCorrectedData().getTemperature(),
+            hihData.getTemperature(), hihData.getHumidity(),
+            this->mpuSensor->getData().getGyroX(), this->mpuSensor->getData().getAccX(),
+            this->ms5Sensor->getCorrectedData().getPressure(), this->ms5Sensor->getCorrectedData().getTemperature()
+        );
     }
     this->setBuffer(newbuffer);
     /*gpsData.print();

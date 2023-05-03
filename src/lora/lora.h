@@ -38,6 +38,7 @@ namespace Lora {
         public:
             Lora(GPSSensor*, LM75Sensor*, HIHSensor*, MS5Sensor*);
             void configure() override;
+            void setStatus(uint8_t status) {this->status = status;};
             void tick() override;
             bool canWork(uint16_t);
     };

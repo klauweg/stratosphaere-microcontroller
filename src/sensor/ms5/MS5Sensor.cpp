@@ -1,7 +1,7 @@
 #include "MS5Sensor.h"
 #include <Wire.h>
 
-MS5Data::MS5Data(int32_t pressure, int32_t temperature) {
+MS5Data::MS5Data(uint32_t pressure, uint32_t temperature) {
     this->pressure = pressure;
     this->temperature = temperature;
 }
@@ -32,9 +32,9 @@ void MS5Sensor::configure() {
 }
 
 void MS5Sensor::measure() {
-  int32_t pressure = MS5Sensor::getMeasurement(PRESSURE);
+  uint32_t pressure = MS5Sensor::getMeasurement(PRESSURE);
   uint8_t pstatus = this->getStatus();
-  int32_t temperature = MS5Sensor::getMeasurement(TEMPERATURE);
+  uint32_t temperature = MS5Sensor::getMeasurement(TEMPERATURE);
   uint8_t tstatus = this->getStatus();
   this->status = (pstatus == 1 && tstatus == 1) ? 1 : 0;
   this->data = MS5Data{pressure, temperature};
@@ -50,7 +50,7 @@ int32_t MS5Sensor::getMeasurement(measurement _measurement) {
   Wire.write(CMD_ADC_READ);
   Wire.endTransmission(true);
   Wire.requestFrom(MS5_ADDRESS, (size_t) 3, true);
-  uint32_t measurement = (Wire.read() << 16) + ((uint32_t)Wire.read() << 8) + Wire.read();
+  uint32_t measurement = ((uint32_t)Wire.read() << 16) + ((uint32_t)Wire.read() << 8) + Wire.read();
   return measurement;
 }
 

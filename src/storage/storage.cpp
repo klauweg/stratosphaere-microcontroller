@@ -66,12 +66,9 @@ int32_t Storage::getFileCount() {
         this->status = 14;
         return -1;
     }
-
-    File openFile = root.openNextFile();
     int32_t index = 0;
-    while(openFile){
+    while(root.openNextFile()){
         index++;
-        openFile = root.openNextFile();
     }
     return index;
 }

@@ -5,7 +5,7 @@
 
 const uint8_t MS5_ADDRESS = 0x76;
 const uint8_t CMD_ADC_READ = 0x00;
-const uint8_t CMD_ADC_CONV = 0x48;
+const uint8_t CMD_ADC_CONV = 0x44;
 const uint8_t CMD_PROM = 0xA0;
 
 enum measurement {	
@@ -26,15 +26,15 @@ struct MS5CorrectedData {
 
 class MS5Data : public SensorData {
     private:
-        int32_t pressure;
-        int32_t temperature;
+        uint32_t pressure;
+        uint32_t temperature;
     public:
-        MS5Data(int32_t, int32_t);
+        MS5Data(uint32_t, uint32_t);
         MS5Data();
         void print() override {};
         void print(MS5CorrectedData corrected) const;
-        int32_t getPressure() const {return this->pressure;};
-        int32_t getTemperature() const {return this->temperature;};
+        uint32_t getPressure() const {return this->pressure;};
+        uint32_t getTemperature() const {return this->temperature;};
 };
 
 class MS5Sensor : public Sensor<MS5Data> {
