@@ -26,16 +26,10 @@ void Display::tick() {
                 this->ms5Sensor->getCorrectedData().getPressure(), this->ms5Sensor->getCorrectedData().getTemperature()
         );
     } else {
-        sprintf(newbuffer, "GPS: %2.2f %2.2f %u\n"
-                           "LM: %.1f\n"
-                           "HIH: %.1f %.0f\n"
-                           "MPU: %d %d\n"
-                           "MS5: %.3f %.1f",
-            gpsData.location.lat(), gpsData.location.lng(), gpsData.time.second(),
-            this->lm75Sensor->getCorrectedData().getTemperature(),
-            hihData.getTemperature(), hihData.getHumidity(),
-            this->mpuSensor->getData().getGyroX(), this->mpuSensor->getData().getAccX(),
-            this->ms5Sensor->getCorrectedData().getPressure(), this->ms5Sensor->getCorrectedData().getTemperature()
+        sprintf(newbuffer, "Lora: %u\n"
+                           "SD: %u\n"
+                           "F: %s\n",
+            this->lora->getStatus(), this->storage->getStatus(), this->storage->getFileName().c_str()
         );
     }
     this->setBuffer(newbuffer);

@@ -23,7 +23,7 @@ namespace Lora {
             .nss = 18,
             .rxtx = LMIC_UNUSED_PIN,
             .rst = 23,
-            .dio = {26},
+            .dio = {26, 33, 32},
     };
 
     class Lora : public Module {
