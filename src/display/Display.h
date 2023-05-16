@@ -21,11 +21,11 @@ class Display : public Module {
         Storage *storage;
         Lora::Lora *lora;
         Adafruit_SSD1306* disp;
-        std::string buffer;
-        void render();
+        uint8_t display_state = 0;
+        unsigned long last_state_change = 0;
+        void render(const char*);
     public:
         Display(GPSSensor*, LM75Sensor*, HIHSensor*, MPUSensor*, MS5Sensor*, Storage*, Lora::Lora*);
-        void setBuffer(const std::string& buffer);
         void configure() override;
         void tick() override;
 };

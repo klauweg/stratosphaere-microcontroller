@@ -5,52 +5,44 @@ void Display::configure() {
     this->disp->begin(SSD1306_SWITCHCAPVCC, 0x3C);
     this->disp->setTextColor(WHITE);
     this->disp->setTextSize(1);
-    this->render();
 }
 
 void Display::tick() {
     GPSData gpsData = this->gpsSensor->getData();
-    LM75Data lm75Data = this->lm75Sensor->getData();
     HIHCorrectedData hihData = this->hihSensor->getCorrectedData();
-    char newbuffer[300];
-    if (millis() % 20000 < 10000) {
-        sprintf(newbuffer, "GPS: %2.2f %2.2f %u\n"
-                           "LM: %.1f\n"
-                           "HIH: %.1f %.0f\n"
-                           "MPU: %d %d\n"
-                           "MS5: %.3f %.1f",
-                gpsData.location.lat(), gpsData.location.lng(), gpsData.time.second(),
-                this->lm75Sensor->getCorrectedData().getTemperature(),
-                hihData.getTemperature(), hihData.getHumidity(),
-                this->mpuSensor->getData().getGyroX(), this->mpuSensor->getData().getAccX(),
-                this->ms5Sensor->getCorrectedData().getPressure(), this->ms5Sensor->getCorrectedData().getTemperature()
-        );
-    } else {
-        sprintf(newbuffer, "Lora: %u\n"
-                           "SD: %u\n"
-                           "F: %s\n",
-            this->lora->getStatus(), this->storage->getStatus(), this->storage->getFileName().c_str()
-        );
+    if (millis() - this->last_state_change > 5000) {
+        this->last_state_change = millis();
+        this->display_state = (this->display_state + 1) % 2;
+
+        char newbuffer[300];
+
+        if (this->display_state == 0) {
+            sprintf(newbuffer, "GPS: %2.2f %2.2f %u\n"
+                               "LM: %.1f\n"
+                               "HIH: %.1f %.0f\n"
+                               "MPU: %d %d\n"
+                               "MS5: %.3f %.1f",
+                    gpsData.location.lat(), gpsData.location.lng(), gpsData.time.second(),
+                    this->lm75Sensor->getCorrectedData().getTemperature(),
+                    hihData.getTemperature(), hihData.getHumidity(),
+                    this->mpuSensor->getData().getGyroX(), this->mpuSensor->getData().getAccX(),
+                    this->ms5Sensor->getCorrectedData().getPressure(), this->ms5Sensor->getCorrectedData().getTemperature()
+            );
+        } else if (this->display_state == 1) {
+            sprintf(newbuffer, "Lora: %u\n"
+                               "SD: %u\n"
+                               "F: %s\n",
+                    this->lora->getStatus(), this->storage->getStatus(), this->storage->getFileName().c_str()
+            );
+        }
+        this->render(newbuffer);
     }
-    this->setBuffer(newbuffer);
-    /*gpsData.print();
-    this->hihSensor->getData().print();
-    lm75Data.print();
-    this->mpuSensor->getData().print();
-    this->ms5Sensor->getData().print();
-    this->ms5Sensor->getData().print(this->ms5Sensor->getCorrectedData());*/
 }
 
-void Display::setBuffer(const std::string& buff) {
-    if (buff == this->buffer) return;
-    this->buffer = buff;
-    this->render();
-}
-
-void Display::render() {
+void Display::render(const char* buff) {
     this->disp->clearDisplay();
     this->disp->setCursor(0, 0);
-    this->disp->print(this->buffer.c_str());
+    this->disp->print(buff);
     this->disp->display();
 }
 
